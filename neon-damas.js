@@ -245,7 +245,10 @@ heartbeat=setInterval(async()=>{
  }catch(e){
   serverOnline=false;
   if(Date.now()-lastResponseAt>12000)note('Sem conexão com a sala de damas. Tentando reconectar...','error');
- }finally{busy=false}
+ }finally{
+  busy=false;
+  if(state){lastDraw='';renderBoard();}
+ }
 },2800);
 bootstrap();
 })();
