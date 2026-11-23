@@ -164,10 +164,12 @@
                 <button type="button" id="np-damas-leave" class="np-damas-start">Nova partida</button>
               </div>
             </div>
-            <div class="np-damas-info">
-              <strong>📣 Desafios abertos: <span id="np-damas-queue-count">0</span></strong>
+            <div class="np-damas-info np-damas-lobby-head">
+              <strong>📣 Desafios de outros jogadores: <span id="np-damas-queue-count">0</span></strong>
+              <button type="button" id="np-damas-refresh" class="np-damas-secondary">↻ Atualizar lista</button>
             </div>
-            <p><small>Escolha uma oferta abaixo para aceitar a partida. O valor será descontado dos dois jogadores somente quando alguém aceitar.</small></p>
+            <p><small>Os desafios ficam disponíveis por até 30 minutos sem atualização. Seu próprio desafio aparece acima, não nesta lista. Toque em Aceitar para entrar na partida.</small></p>
+            <p id="np-damas-updated" class="np-damas-updated" role="status" aria-live="polite">Conectando à lista...</p>
             <div id="np-damas-waiting-list" class="np-damas-waiting-list" aria-label="Lista de desafios online"></div>
             <p><small>Regras simplificadas: tabuleiro 8×8, captura obrigatória e sequencial, peças comuns avançam e capturam em ambas as diagonais. Damas promovidas andam uma casa por diagonal. Partidas sem lance terminam em derrota.</small></p>
             <p><small>Jogo experimental: créditos das damas ficam no servidor, independentes dos créditos dos jogos solo.</small></p>
