@@ -68,3 +68,13 @@
  .np-damas-offer{gap:6px;padding:9px}
  .np-damas-accept{padding:10px 11px}
 }
+
+/* Lista pública: atualização e disponibilidade dos desafios */
+.np-damas-lobby-head{justify-content:space-between;align-items:center}
+.np-damas-lobby-head .np-damas-secondary{padding:8px 11px;white-space:nowrap}
+.np-damas-updated{font-size:11px!important;color:#b7d6a4!important;line-height:1.4;margin:7px 0}
+.np-damas-offer{min-height:68px}
+@media(max-width:420px){
+ .np-damas-lobby-head{gap:10px}
+ .np-damas-lobby-head .np-damas-secondary{font-size:11px}
+}
