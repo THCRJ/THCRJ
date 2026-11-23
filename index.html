@@ -139,6 +139,28 @@
             <button type="button" class="wallet-primary" id="wallet-sell-btn" disabled>Simular venda de créditos</button>
           </div>
         </div>
+        <section class="wallet-pagbank" aria-label="Integração de testes PagBank">
+          <div class="wallet-pagbank-top">
+            <h3>PagBank · Pix</h3>
+            <span>AMBIENTE DE TESTE</span>
+          </div>
+          <p>Integração de cobrança Pix pelo PagBank Sandbox. O QR Code de teste não recebe pagamentos reais e não adiciona créditos à carteira.</p>
+          <p id="wallet-pagbank-status" class="wallet-pagbank-status" role="status" aria-live="polite">Verificando conexão de testes...</p>
+          <p><small>Valor selecionado para o teste: <strong id="wallet-pagbank-amount">R$ 0,10</strong>. Preencha o valor em Comprar créditos, acima.</small></p>
+          <button type="button" id="wallet-pagbank-create" class="wallet-primary" disabled>Gerar QR Code Pix de teste</button>
+          <div id="wallet-pagbank-result" class="wallet-pagbank-result" hidden>
+            <strong>Pedido PagBank Sandbox</strong>
+            <p id="wallet-pagbank-order-status">Aguardando consulta.</p>
+            <img id="wallet-pagbank-qr" alt="QR Code demonstrativo fornecido pelo PagBank Sandbox" loading="lazy" hidden/>
+            <label for="wallet-pagbank-copy">Código Pix de teste (não válido para pagamentos reais)</label>
+            <textarea id="wallet-pagbank-copy" rows="3" readonly placeholder="Aguardando código de teste"></textarea>
+            <div class="wallet-pagbank-actions">
+              <button type="button" id="wallet-pagbank-copy-btn" class="np-damas-secondary">Copiar código de teste</button>
+              <button type="button" id="wallet-pagbank-check-btn" class="np-damas-secondary">Verificar status de teste</button>
+            </div>
+          </div>
+          <p class="wallet-pagbank-foot">Saídas Pix: a API de Transferências do PagBank requer habilitação própria e certificados. Nesta versão, Vender créditos permanece apenas uma simulação.</p>
+        </section>
         <div class="wallet-history">
           <div class="wallet-history-head">
             <h3>Histórico da carteira</h3>
