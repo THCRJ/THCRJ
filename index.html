@@ -128,19 +128,22 @@
             <input id="np-damas-nickname" class="np-damas-nickname" maxlength="18" placeholder="Seu apelido" autocomplete="nickname"/>
             <button type="button" id="np-damas-name-save" class="np-damas-secondary">Salvar apelido</button>
             <div id="np-damas-find">
-              <p><b>Escolha os créditos da disputa:</b></p>
-              <div class="np-damas-stakes" role="group" aria-label="Valor da aposta virtual">
+              <p><b>Defina o valor do seu desafio:</b></p>
+              <label class="np-damas-label" for="np-damas-stake-value">CRÉDITOS VIRTUAIS POR JOGADOR</label>
+              <input id="np-damas-stake-value" class="np-damas-nickname" type="number" min="1" step="1" value="100" inputmode="numeric" placeholder="Ex.: 750" aria-describedby="np-damas-stake-explain"/>
+              <div class="np-damas-stakes" role="group" aria-label="Sugestões de valores">
                 <button type="button" class="np-damas-stake selected" data-stake="100">100</button>
                 <button type="button" class="np-damas-stake" data-stake="500">500</button>
                 <button type="button" class="np-damas-stake" data-stake="1000">1.000</button>
                 <button type="button" class="np-damas-stake" data-stake="5000">5.000</button>
               </div>
-              <button type="button" id="np-damas-start" class="np-damas-start">Encontrar adversário</button>
+              <p id="np-damas-stake-explain"><small>Você pode digitar qualquer valor inteiro de 1 crédito até seu saldo disponível. Ninguém entra automaticamente na partida.</small></p>
+              <button type="button" id="np-damas-start" class="np-damas-start">Publicar desafio</button>
             </div>
             <div id="np-damas-waiting" class="np-damas-waiting" hidden>
-              🔎 Procurando adversário de <b id="np-damas-wait-stake">100</b> créditos...
+              📣 Seu desafio de <b id="np-damas-wait-stake">100</b> créditos está publicado. Aguarde alguém aceitar.
               <div class="np-damas-actions">
-                <button type="button" id="np-damas-cancel" class="np-damas-secondary">Cancelar busca</button>
+                <button type="button" id="np-damas-cancel" class="np-damas-secondary">Cancelar desafio</button>
               </div>
             </div>
             <div id="np-damas-match" class="np-damas-match" hidden>
@@ -162,9 +165,10 @@
               </div>
             </div>
             <div class="np-damas-info">
-              <strong>Aguardando jogadores: <span id="np-damas-queue-count">0</span></strong>
+              <strong>📣 Desafios abertos: <span id="np-damas-queue-count">0</span></strong>
             </div>
-            <div id="np-damas-waiting-list" class="np-damas-waiting-list"></div>
+            <p><small>Escolha uma oferta abaixo para aceitar a partida. O valor será descontado dos dois jogadores somente quando alguém aceitar.</small></p>
+            <div id="np-damas-waiting-list" class="np-damas-waiting-list" aria-label="Lista de desafios online"></div>
             <p><small>Regras simplificadas: tabuleiro 8×8, captura obrigatória e sequencial, peças comuns avançam e capturam em ambas as diagonais. Damas promovidas andam uma casa por diagonal. Partidas sem lance terminam em derrota.</small></p>
             <p><small>Jogo experimental: créditos das damas ficam no servidor, independentes dos créditos dos jogos solo.</small></p>
             <button type="button" class="np-damas-secondary" id="np-damas-reset">Criar outro perfil de teste</button>
