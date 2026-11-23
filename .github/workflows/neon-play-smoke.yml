@@ -1,0 +1,35 @@
+name: Neon Play - smoke test
+on:
+  push:
+    branches:
+      - neon-play-teste
+    paths:
+      - .github/workflows/neon-play-smoke.yml
+      - index.html
+      - neon-damas.js
+  workflow_dispatch:
+
+jobs:
+  test_connection:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - name: Conferir GET, CORS e RPC do servidor de damas
+        shell: bash
+        env:
+          API_URL: https://plcyaarsfzmjoqkbqlid.supabase.co/functions/v1/neon-damas
+        run: |
+          set -euo pipefail
+          code=$(curl --retry 3 --retry-delay 2 -sS --max-time 20 -o /tmp/neon-health.json -w "%{http_code}" "$API_URL")
+          echo "GET HTTP: $code"
+          test "$code" = "200"
+          python3 -c 'import json; x=json.load(open("/tmp/neon-health.json")); assert x.get("ok") and x.get("game")=="neon-damas"'
+          code=$(curl -sS --max-time 20 -X OPTIONS -o /tmp/neon-options.txt -D /tmp/neon-options-headers.txt -w "%{http_code}" "$API_URL" -H "Origin: https://raw.githack.com" -H "Access-Control-Request-Method: POST" -H "Access-Control-Request-Headers: content-type")
+          echo "OPTIONS HTTP: $code"
+          test "$code" = "204"
+          grep -iq 'access-control-allow-origin: \*' /tmp/neon-options-headers.txt
+          code=$(curl -sS --max-time 20 -o /tmp/neon-action.json -w "%{http_code}" "$API_URL" -X POST -H "Content-Type: application/json" --data '{"action":"state","id":"00000000-0000-0000-0000-000000000001","token":"01234567890123456789012345"}')
+          echo "POST estado sem sessao HTTP: $code"
+          test "$code" = "400"
+          python3 -c 'import json; x=json.load(open("/tmp/neon-action.json")); assert "error" in x'
+          echo "Neon Play: GET/CORS e RPC responderam normalmente."
