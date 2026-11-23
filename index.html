@@ -66,6 +66,7 @@
 
 </style>
 <link rel="stylesheet" href="./neon-chat.css">
+  <link rel="stylesheet" href="./neon-damas.css">
 </head>
 <body>
   <div class="app-shell">
@@ -73,7 +74,7 @@
       <a class="brand" href="#jogos" aria-label="Neon Play, página inicial">
         <span class="brand-logo">◆</span><span>NEON<span class="brand-alt">PLAY</span><small>CASSINO SOCIAL</small></span>
       </a>
-      <div class="wallet" aria-live="polite"><span class="coin">●</span><span><small>MEU SALDO</small><b id="top-balance">—</b></span></div>
+      <div class="wallet" aria-live="polite"><span class="coin">●</span><span><small>SALDO JOGOS SOLO</small><b id="top-balance">—</b></span></div>
     </header>
     <main class="main">
       <div id="demo-banner" class="demo-banner" hidden>Prévia local para testes: os créditos ficam apenas neste aparelho.</div>
@@ -83,10 +84,10 @@
         <div class="hero-content">
           <div class="eyebrow"><span class="dot"></span> Diversão com créditos virtuais</div>
           <h1>O jogo começa <em>aqui.</em></h1>
-          <p>Corrida de cavalos, dados e caça-níquel: diversão com créditos fictícios.</p>
-          <button class="bonus-button" id="bonus-button" type="button"><span>🎁</span><span id="bonus-label">Resgatar +250 créditos diários</span></button>
+          <p>Desafie outros jogadores nas damas online ou divirta-se com dados e caça-níquel, sempre com créditos fictícios.</p>
+          <button class="bonus-button" id="bonus-button" type="button"><span>🎁</span><span id="bonus-label">Resgatar +250 créditos nos jogos solo</span></button>
         </div>
-        <div class="hero-art" aria-hidden="true">🏇</div>
+        <div class="hero-art" aria-hidden="true">♟️</div>
       </section>
       <section class="stats" aria-label="Seu desempenho">
         <div class="stat"><small>CRÉDITOS</small><strong id="stat-balance">—</strong><span>sem valor monetário</span></div>
@@ -94,41 +95,82 @@
         <div class="stat"><small>VITÓRIAS</small><strong id="stat-wins">0</strong><span>rodadas com ganho</span></div>
       </section>
       <nav class="tabs" aria-label="Seções">
-        <button class="tab active" data-tab="games" type="button">🎮 Jogos</button>
+        <button class="tab active" data-tab="checkers" type="button">♟️ Damas online</button>
+        <button class="tab" data-tab="games" type="button">🎮 Jogos</button>
         <button class="tab" data-tab="history" type="button">◷ Histórico</button>
         <button class="tab" data-tab="rules" type="button">ⓘ Regras</button>
       </nav>
-      <section id="games-panel" class="panel">
-        <div class="section-head"><div><div class="overline">ESCOLHA SUA DIVERSÃO</div><h2>Salão de jogos</h2></div><span class="live-label">● 3 jogos</span></div>
-        <div class="game-selector" role="group" aria-label="Selecione um jogo">
-          <button class="game-tile active" data-game="horses" type="button"><span class="tile-icon">🏇</span><b>Cavalos</b><small>Corrida 3D</small></button>
-          <button class="game-tile" data-game="dice" type="button"><span class="tile-icon">🎲</span><b>Dados</b><small>Até 7 ou acima</small></button>
-          <button class="game-tile" data-game="slots" type="button"><span class="tile-icon">🎰</span><b>Caça-níquel</b><small>Combine símbolos</small></button>
+      
+      <section id="checkers-panel" class="panel" aria-label="Damas multiplayer com créditos fictícios">
+        <div class="section-head">
+          <div><div class="overline">JOGUE CONTRA PESSOAS REAIS</div><h2>♟️ Damas Online</h2></div>
+          <span class="live-label">● MULTIPLAYER</span>
         </div>
-        <div class="game-table">
-          <div class="table-title"><div><small>AGORA JOGANDO</small><h3 id="game-title">Corrida dos cavalos 3D</h3></div><span class="play-badge">● CRÉDITOS VIRTUAIS</span></div>
-          <div class="stage" id="stage">
-            <div class="horses-stage" id="horses-stage"><div class="race-board"><div class="race-heading"><span>🏁 PISTA NEON • 6 COMPETIDORES</span><b id="race-status">PRONTO PARA LARGADA</b></div><div class="race-viewport" id="race-viewport">
-  <canvas id="race-canvas" role="img" aria-label="Pista de corrida em três dimensões com seis cavalos e câmera móvel"></canvas>
-  <div class="race-hud"><span class="three-d-badge">● 3D AO VIVO</span><button id="camera-button" type="button" class="camera-button" aria-label="Alternar câmera da corrida">🎥 Câmera traseira</button></div>
-</div>
-<div id="race-standings" class="race-standings" aria-label="Classificação dos cavalos"></div>
-<div id="race-lanes" class="race-lanes" aria-label="Pista de corrida alternativa para celulares sem WebGL" hidden></div><div class="race-caption"><span>LARGADA</span><span>CHEGADA 🏁</span></div></div></div>
-            <div class="dice-stage" id="dice-stage" hidden><span class="dice-face" id="dice-one">⚀</span><span class="dice-face" id="dice-two">⚀</span></div>
-            <div class="slots-stage" id="slots-stage" hidden><div id="slot-1">🍒</div><div id="slot-2">🔔</div><div id="slot-3">🍀</div></div>
-          </div>
-          <div class="result" id="result" aria-live="polite">Escolha sua opção e faça sua primeira jogada.</div>
-          <div class="game-controls">
-            <div class="choice-label" id="choice-label">ESCOLHA SEU CAVALO</div>
-            <div class="choices" id="choices">
-              
+        <div class="np-damas-wrap">
+          <div class="np-damas-game">
+            <div class="np-damas-head">
+              <div class="np-damas-label">JOGADOR <div class="np-damas-player"><b id="np-damas-player-name">Conectando...</b></div></div>
+              <div class="np-damas-money"><small>SALDO DAS DAMAS ONLINE</small><b id="np-damas-balance">—</b></div>
             </div>
-            <div class="bet-line"><span>VALOR DA JOGADA</span><span class="bet-range">10–200 créditos</span></div>
-            <div class="chips" id="chips"><button class="chip" data-stake="10" type="button">10</button><button class="chip selected" data-stake="25" type="button">25</button><button class="chip" data-stake="50" type="button">50</button><button class="chip" data-stake="100" type="button">100</button><button class="chip" data-stake="200" type="button">200</button></div>
-            <button class="play-button" id="play-button" type="button" disabled>JOGAR 25 CRÉDITOS <span>↗</span></button>
-            <p class="odds" id="odds">Escolha um dos 6 cavalos. O prêmio depende do multiplicador exibido.</p>
+            <div id="np-damas-hint" class="np-damas-hint" role="status" aria-live="polite">Conectando ao salão...</div>
+            <div id="np-damas-board" class="np-damas-board" role="group" aria-label="Tabuleiro de damas com 64 casas"></div>
+            <div class="np-damas-legend">
+              <span>⚪ Peças claras começam</span>
+              <span>⚫ Capturas obrigatórias</span>
+              <span>♛ Peça promovida</span>
+            </div>
+            <button type="button" id="np-damas-retry" class="np-damas-secondary" hidden style="margin-top:12px">↻ Reconectar</button>
           </div>
+          <aside class="np-damas-side">
+            <h3>🏆 Jogar valendo créditos</h3>
+            <p>Partidas de 2 pessoas. Os dois apostam o mesmo valor. O vencedor recebe o pote inteiro. Nenhum crédito pode ser sacado ou convertido em dinheiro.</p>
+            <label class="np-damas-label" for="np-damas-nickname">SEU APELIDO</label>
+            <input id="np-damas-nickname" class="np-damas-nickname" maxlength="18" placeholder="Seu apelido" autocomplete="nickname"/>
+            <button type="button" id="np-damas-name-save" class="np-damas-secondary">Salvar apelido</button>
+            <div id="np-damas-find">
+              <p><b>Escolha os créditos da disputa:</b></p>
+              <div class="np-damas-stakes" role="group" aria-label="Valor da aposta virtual">
+                <button type="button" class="np-damas-stake selected" data-stake="100">100</button>
+                <button type="button" class="np-damas-stake" data-stake="500">500</button>
+                <button type="button" class="np-damas-stake" data-stake="1000">1.000</button>
+                <button type="button" class="np-damas-stake" data-stake="5000">5.000</button>
+              </div>
+              <button type="button" id="np-damas-start" class="np-damas-start">Encontrar adversário</button>
+            </div>
+            <div id="np-damas-waiting" class="np-damas-waiting" hidden>
+              🔎 Procurando adversário de <b id="np-damas-wait-stake">100</b> créditos...
+              <div class="np-damas-actions">
+                <button type="button" id="np-damas-cancel" class="np-damas-secondary">Cancelar busca</button>
+              </div>
+            </div>
+            <div id="np-damas-match" class="np-damas-match" hidden>
+              <small>ADVERSÁRIO</small>
+              <div class="np-damas-info">
+                <strong class="np-damas-name" id="np-damas-opponent">—</strong>
+                <span>🏆 <b id="np-damas-pot" class="np-damas-bet">—</b></span>
+              </div>
+              <p>Suas peças: <b id="np-damas-your-color">—</b> · Jogadas: <b id="np-damas-moves">0</b></p>
+              <div class="np-damas-actions" id="np-damas-play-actions">
+                <button type="button" id="np-damas-offer-draw" class="np-damas-secondary">🤝 Pedir empate</button>
+                <button type="button" id="np-damas-accept-draw" class="np-damas-secondary" hidden>✅ Aceitar empate</button>
+                <button type="button" id="np-damas-decline-draw" class="np-damas-secondary" hidden>Recusar</button>
+                <button type="button" id="np-damas-resign" class="np-damas-secondary">Desistir</button>
+                <button type="button" id="np-damas-claim-timeout" class="np-damas-secondary" hidden>Vitória por ausência</button>
+              </div>
+              <div class="np-damas-actions" id="np-damas-finished-actions" hidden>
+                <button type="button" id="np-damas-leave" class="np-damas-start">Nova partida</button>
+              </div>
+            </div>
+            <div class="np-damas-info">
+              <strong>Aguardando jogadores: <span id="np-damas-queue-count">0</span></strong>
+            </div>
+            <div id="np-damas-waiting-list" class="np-damas-waiting-list"></div>
+            <p><small>Regras simplificadas: tabuleiro 8×8, captura obrigatória e sequencial, peças comuns avançam e capturam em ambas as diagonais. Damas promovidas andam uma casa por diagonal. Partidas sem lance terminam em derrota.</small></p>
+            <p><small>Jogo experimental: créditos das damas ficam no servidor, independentes dos créditos dos jogos solo.</small></p>
+            <button type="button" class="np-damas-secondary" id="np-damas-reset">Criar outro perfil de teste</button>
+          </aside>
         </div>
+        <h3 class="np-damas-chat-title">💬 Chat dos jogadores</h3>
         <section id="np-chat-panel" class="np-chat-panel" aria-label="Chat público ao vivo do Neon Play">
           <div class="np-chat-head">
             <div><h2>💬 Conversa dos jogadores</h2>
@@ -156,10 +198,44 @@
           <div class="np-chat-safety">Chat público e temporário · não compartilhe informações pessoais</div>
         </section>
       </section>
+
+      <section id="games-panel" class="panel" hidden>
+        <div class="section-head"><div><div class="overline">ESCOLHA SUA DIVERSÃO</div><h2>Salão de jogos</h2></div><span class="live-label">● 2 jogos solo</span></div>
+        <div class="game-selector" role="group" aria-label="Selecione um jogo">
+          
+          <button class="game-tile active" data-game="dice" type="button"><span class="tile-icon">🎲</span><b>Dados</b><small>Até 7 ou acima</small></button>
+          <button class="game-tile" data-game="slots" type="button"><span class="tile-icon">🎰</span><b>Caça-níquel</b><small>Combine símbolos</small></button>
+        </div>
+        <div class="game-table">
+          <div class="table-title"><div><small>AGORA JOGANDO</small><h3 id="game-title">Corrida dos cavalos 3D</h3></div><span class="play-badge">● CRÉDITOS VIRTUAIS</span></div>
+          <div class="stage" id="stage">
+            <div class="horses-stage" id="horses-stage"><div class="race-board"><div class="race-heading"><span>🏁 PISTA NEON • 6 COMPETIDORES</span><b id="race-status">PRONTO PARA LARGADA</b></div><div class="race-viewport" id="race-viewport">
+  <canvas id="race-canvas" role="img" aria-label="Pista de corrida em três dimensões com seis cavalos e câmera móvel"></canvas>
+  <div class="race-hud"><span class="three-d-badge">● 3D AO VIVO</span><button id="camera-button" type="button" class="camera-button" aria-label="Alternar câmera da corrida">🎥 Câmera traseira</button></div>
+</div>
+<div id="race-standings" class="race-standings" aria-label="Classificação dos cavalos"></div>
+<div id="race-lanes" class="race-lanes" aria-label="Pista de corrida alternativa para celulares sem WebGL" hidden></div><div class="race-caption"><span>LARGADA</span><span>CHEGADA 🏁</span></div></div></div>
+            <div class="dice-stage" id="dice-stage" hidden><span class="dice-face" id="dice-one">⚀</span><span class="dice-face" id="dice-two">⚀</span></div>
+            <div class="slots-stage" id="slots-stage" hidden><div id="slot-1">🍒</div><div id="slot-2">🔔</div><div id="slot-3">🍀</div></div>
+          </div>
+          <div class="result" id="result" aria-live="polite">Escolha sua opção e faça sua primeira jogada.</div>
+          <div class="game-controls">
+            <div class="choice-label" id="choice-label">ESCOLHA SEU CAVALO</div>
+            <div class="choices" id="choices">
+              
+            </div>
+            <div class="bet-line"><span>VALOR DA JOGADA</span><span class="bet-range">10–200 créditos</span></div>
+            <div class="chips" id="chips"><button class="chip" data-stake="10" type="button">10</button><button class="chip selected" data-stake="25" type="button">25</button><button class="chip" data-stake="50" type="button">50</button><button class="chip" data-stake="100" type="button">100</button><button class="chip" data-stake="200" type="button">200</button></div>
+            <button class="play-button" id="play-button" type="button" disabled>JOGAR 25 CRÉDITOS <span>↗</span></button>
+            <p class="odds" id="odds">Escolha um dos 6 cavalos. O prêmio depende do multiplicador exibido.</p>
+          </div>
+        </div>
+        
+      </section>
       <section id="history-panel" class="panel" hidden><div class="section-head"><div><div class="overline">SUAS PARTIDAS</div><h2>Histórico de jogadas</h2></div></div><div class="history" id="history-list"><p>Nenhuma rodada ainda.</p></div></section>
       <section id="rules-panel" class="panel" hidden><div class="section-head"><div><div class="overline">JOGO RESPONSÁVEL</div><h2>Como funciona</h2></div></div>
         <div class="rules-card"><h3>Créditos fictícios</h3><p>Todos os pontos são virtuais, gratuitos, não transferíveis e sem valor financeiro. Não há Pix, cartões, depósitos, apostas com dinheiro, prêmios nem saques.</p></div>
-        <div class="rules-card"><h3>🏇 Corrida dos cavalos 3D</h3><p>Chances por cavalo: 46%, 28%, 14%, 7%, 3% e 2%. Prêmios totais: 2×, 3,2×, 6,4×, 13×, 30× e 46×. Os cavalos 5 e 6 aceitam até 100 créditos por aposta. O resultado é aleatório, não depende da aposta nem do saldo; a corrida é uma animação do sorteio.</p></div>
+        <div class="rules-card"><h3>♟️ Damas contra jogadores online</h3><p>Dois jogadores apostam créditos virtuais iguais e o vencedor recebe a soma. Empate devolve os créditos. Os movimentos e as apostas são validados no servidor. É uma versão experimental, com saldo online separado dos jogos solo e sem dinheiro ou prêmios reais.</p></div>
         <div class="rules-card"><h3>🎲 Dados</h3><p>Até 7: chance de 58,3%, prêmio total de 1,6× (inclui o 7). Acima de 7: chance de 41,7%, prêmio total de 2,2×. Sorteio de dois dados de seis faces.</p></div>
         <div class="rules-card"><h3>🎰 Caça-níquel</h3><p>Três símbolos iguais: prêmio total de 12×. Exatamente dois iguais: 1,4×. Chance de receber prêmio: 44,4%. Outros resultados não pontuam.</p></div>
         <div class="rules-card"><h3>Probabilidade e equilíbrio</h3><p>O retorno teórico (RTP) das apostas é de 89,6% a 93,3%, conforme a escolha. Em média estatística, a diferença de 6,7% a 10,4% favorece a economia do jogo. Isso não determina o resultado de uma partida nem garante saldo positivo a cada período; sorteios não são modificados conforme vitórias ou perdas. Todos os créditos continuam fictícios.</p></div>
@@ -707,15 +783,16 @@ async function claimBonus(){
 }
 function selectTab(tab){
   document.querySelectorAll('.tab').forEach(el=>el.classList.toggle('active',el.dataset.tab===tab));
-  ['games','history','rules'].forEach(name=>{$(name+'-panel').hidden=name!==tab;});
+  ['checkers','games','history','rules'].forEach(name=>{$(name+'-panel').hidden=name!==tab;});
 }
 async function init(){
   buildRaceLanes();
-  if(demo){$('demo-banner').hidden=false;state=localLoad();busy=false;selectGame('horses');render();}
+  if(demo){$('demo-banner').hidden=false;state=localLoad();busy=false;selectGame('dice');render();}
   else{
-    try{state={...initial,...await api('state')};busy=false;selectGame('horses');render();}
+    try{state={...initial,...await api('state')};busy=false;selectGame('dice');render();}
     catch(e){banner('Não foi possível conectar ao servidor: '+e.message);render();}
   }
+  selectTab('checkers');
   document.querySelectorAll('.tab').forEach(el=>el.addEventListener('click',()=>selectTab(el.dataset.tab)));
   document.querySelectorAll('.game-tile').forEach(el=>el.addEventListener('click',()=>selectGame(el.dataset.game)));
   document.querySelectorAll('.chip').forEach(el=>el.addEventListener('click',()=>{if(busy)return;stake=Number(el.dataset.stake);document.querySelectorAll('.chip').forEach(btn=>btn.classList.toggle('selected',btn===el));render();}));
@@ -730,6 +807,7 @@ init();
 </script>
 
 
+<script src="./neon-damas.js"></script>
 <script src="./neon-chat.js"></script>
 
 <!-- Chat usa WebSocket nativo; nenhuma biblioteca externa necessária. -->
