@@ -5,6 +5,7 @@ on:
     paths:
       - index.html
       - neon-auth-app.js
+      - tests/neon-google-session.test.cjs
       - neon-race-3d.js
       - .github/workflows/neon-auth-brl-smoke.yml
   workflow_dispatch:
@@ -19,6 +20,8 @@ jobs:
         run: |
           node --check neon-auth-app.js
           node --check neon-race-3d.js
+      - name: Testar retorno de sessão Google e logout
+        run: node tests/neon-google-session.test.cjs
       - name: Conferir login e ausência de pagamentos ativos
         run: |
           python3 - <<'PY'
