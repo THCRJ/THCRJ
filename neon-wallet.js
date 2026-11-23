@@ -2,13 +2,14 @@
 (()=>{
 'use strict';
 const API='https://plcyaarsfzmjoqkbqlid.supabase.co/functions/v1/neon-wallet-demo';
+const PAGBANK_API='https://plcyaarsfzmjoqkbqlid.supabase.co/functions/v1/neon-pagbank-sandbox';
 const STORE='neon_wallet_demo_2026_v1';
 const $=id=>document.getElementById(id);
 const panel=$('wallet-panel'),buy=$('wallet-buy-amount'),sell=$('wallet-sell-credits');
 if(!panel||!buy||!sell)return;
 const brl=new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'});
 const integer=new Intl.NumberFormat('pt-BR');
-let credentials=null, wallet=null,busy=false;
+let credentials=null, wallet=null,busy=false,pagbankReady=false,pagbankBusy=false,orderTest=null;
 function feedback(message,error=false){
  const el=$('wallet-message');
  el.textContent=message;
@@ -85,6 +86,101 @@ function updateHistory(){
   list.appendChild(row);
  }
 }
+
+async function pagbankRequest(action=null,extras={}){
+ const ctl=new AbortController();
+ const timer=setTimeout(()=>ctl.abort(),16000);
+ try{
+  const response=await fetch(PAGBANK_API,{
+   method:action?'POST':'GET',
+   headers:{'Content-Type':'application/json'},
+   cache:'no-store',
+   ...(action?{body:JSON.stringify({
+     action,wallet_id:credentials?.id,wallet_token:credentials?.token,...extras
+   })}:{}),
+   signal:ctl.signal
+  });
+  let data;try{data=await response.json()}catch{throw new Error('Resposta inválida do servidor PagBank Sandbox')}
+  if(!response.ok||!data?.ok)throw new Error(data?.error||'Integração de testes indisponível');
+  return data;
+ }catch(e){
+  if(e?.name==='AbortError')throw new Error('Teste PagBank demorou demais para responder');
+  if(e instanceof TypeError)throw new Error('Sem conexão com o servidor de testes PagBank');
+  throw e;
+ }finally{clearTimeout(timer)}
+}
+function renderPagbank(){
+ const cents=parseCents(buy);
+ $('wallet-pagbank-amount').textContent=cents===null?'Valor inválido':brl.format(cents);
+ $('wallet-pagbank-create').disabled=!pagbankReady||!credentials||!wallet||busy||pagbankBusy||cents===null||cents<10;
+ $('wallet-pagbank-create').textContent=pagbankBusy?'Processando teste...':'Gerar QR Code Pix de teste';
+ $('wallet-pagbank-check-btn').disabled=!orderTest||pagbankBusy;
+}
+function showTestOrder(){
+ const root=$('wallet-pagbank-result');
+ root.hidden=!orderTest;
+ if(!orderTest)return;
+ const statusLabels={created:'Criando...',waiting:'Aguardando pagamento de teste',paid_sandbox:'Pago no sandbox (nenhum crédito real)',
+   declined:'Recusado no sandbox',canceled:'Cancelado no sandbox',error:'Falha ao gerar teste'};
+ const status=$('wallet-pagbank-order-status');
+ status.textContent=(statusLabels[orderTest.status]||'Teste '+orderTest.status)+
+   ' · '+brl.format((orderTest.amount_cents||0)/100);
+ const input=$('wallet-pagbank-copy');
+ input.value=orderTest.pix_copy_paste||'';
+ const img=$('wallet-pagbank-qr');
+ const src=typeof orderTest.pix_image==='string'?orderTest.pix_image:'';
+ if(src.startsWith('https://sandbox.api.pagseguro.com/qrcode/')){
+  img.src=src;img.hidden=false;
+ }else{
+  img.removeAttribute('src');img.hidden=true;
+ }
+ $('wallet-pagbank-copy-btn').disabled=!input.value;
+}
+async function loadPagbank(){
+ try{
+  const s=await pagbankRequest();
+  pagbankReady=Boolean(s.sandbox_ready);
+  $('wallet-pagbank-status').textContent=pagbankReady
+    ?'Sandbox PagBank configurado. QR Codes gerados aqui servem somente para homologação.'
+    :'PagBank selecionado. Aguardando token de sandbox e habilitação técnica no servidor. Pix real continua desativado.';
+  if(credentials){
+   const history=await pagbankRequest('history');
+   if(Array.isArray(history.orders)&&history.orders.length){
+    orderTest=history.orders[0];showTestOrder();
+   }
+  }
+ }catch(e){
+  pagbankReady=false;
+  $('wallet-pagbank-status').textContent=e.message||'Integração PagBank indisponível';
+ }finally{renderPagbank()}
+}
+async function makeTestPix(){
+ if(!credentials||!wallet||!pagbankReady||pagbankBusy)return;
+ const cents=parseCents(buy);
+ if(cents===null||cents<10){
+  $('wallet-pagbank-status').textContent='Escolha pelo menos R$ 0,10 para testar a geração do Pix.';
+  return;
+ }
+ pagbankBusy=true;renderPagbank();
+ try{
+  const data=await pagbankRequest('create_test_pix',{cents});
+  orderTest=data.order;
+  showTestOrder();
+  $('wallet-pagbank-status').textContent='Pedido criado somente no sandbox. Não pague com dinheiro real e não espere crédito na carteira.';
+ }catch(e){$('wallet-pagbank-status').textContent=e.message||'Não foi possível gerar o teste.'}
+ finally{pagbankBusy=false;renderPagbank()}
+}
+async function checkTestPix(){
+ if(!credentials||!orderTest||pagbankBusy)return;
+ pagbankBusy=true;renderPagbank();
+ try{
+  const result=await pagbankRequest('check_test_pix',{order_id:orderTest.id});
+  orderTest=result.order;showTestOrder();
+  $('wallet-pagbank-status').textContent=result.message||'Estado de homologação consultado.';
+ }catch(e){$('wallet-pagbank-status').textContent=e.message||'Não foi possível consultar o teste'}
+ finally{pagbankBusy=false;renderPagbank()}
+}
+
 function render(){
  const balance=wallet?.account?.balance_credits||0;
  $('wallet-balance').textContent=integer.format(balance);
@@ -95,6 +191,7 @@ function render(){
  $('wallet-buy-btn').disabled=busy||!wallet||cents===null;
  $('wallet-sell-btn').disabled=busy||!wallet||num===null||num>balance;
  $('wallet-refresh').disabled=busy;
+ renderPagbank();
  updateHistory();
 }
 async function perform(action,credits){
@@ -129,7 +226,7 @@ async function start(){
  }catch(error){
   if(/Sessão/i.test(error.message)){discardAuth();credentials=null}
   feedback(error.message||'Não foi possível abrir a carteira de teste',true);
- }finally{busy=false;render()}
+ }finally{busy=false;render();loadPagbank()}
 }
 $('wallet-buy-btn').addEventListener('click',()=>{
  const cents=parseCents(buy);
@@ -143,6 +240,20 @@ $('wallet-sell-btn').addEventListener('click',()=>{
  perform('sell_demo',credits);
 });
 $('wallet-refresh').addEventListener('click',refresh);
+$('wallet-pagbank-create').addEventListener('click',makeTestPix);
+$('wallet-pagbank-check-btn').addEventListener('click',checkTestPix);
+$('wallet-pagbank-copy-btn').addEventListener('click',()=>{
+ const content=$('wallet-pagbank-copy').value;
+ if(!content)return;
+ if(navigator.clipboard?.writeText){
+  navigator.clipboard.writeText(content)
+   .then(()=>$('wallet-pagbank-status').textContent='Código de teste copiado.')
+   .catch(()=>$('wallet-pagbank-status').textContent='Selecione e copie o código de teste manualmente.');
+ }else{
+  $('wallet-pagbank-copy').focus();
+  $('wallet-pagbank-copy').select();
+ }
+});
 document.querySelectorAll('[data-wallet-buy]').forEach(chip=>{
  chip.addEventListener('click',()=>{buy.value=chip.dataset.walletBuy;render()});
 });
