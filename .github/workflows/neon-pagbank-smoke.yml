@@ -41,6 +41,7 @@ jobs:
           assert health['provider']=='PagBank' and health['environment']=='sandbox'
           assert health['real_pix_enabled'] is False and health['payouts_enabled'] is False
           print('PAGBANK SANDBOX:',health['environment'],'READY:',health['sandbox_ready'])
+          print('PAGBANK_MISSING_SETTINGS:',health.get('missing_settings',[]))
           call(pb,{'action':'quote','wallet_id':'00000000-0000-0000-0000-000000000001',
                    'wallet_token':'invalid-token-at-least-thirty-chars-123'},expect_error=True)
           a=call(w,{'action':'bootstrap','label':'QA_PAGBANK_WALLET_1122'})
@@ -54,6 +55,17 @@ jobs:
           if not health['sandbox_ready']:
               denied=call(pb,{'action':'create_test_pix',**credentials,'cents':10},expect_error=True)
               assert 'Sandbox' in denied['error'] or 'configurado' in denied['error']
+          else:
+              try:
+                  pix=call(pb,{'action':'create_test_pix',**credentials,'cents':10})
+                  order=pix['order']
+                  assert order['amount_cents']==10
+                  assert pix['environment']=='sandbox' and pix['credits_added'] is False
+                  print('PAGBANK_QR_TEST_CREATED:',order['status'],order['id'])
+              except urllib.error.HTTPError as error:
+                  result=json.loads(error.read())
+                  print('PAGBANK_QR_TEST_ERROR:',error.code,str(result.get('error',''))[:180])
+                  raise
           wallet=call(w,{'action':'state',**{'id':id,'token':token}})
           assert wallet['account']['balance_credits']==0 and len(wallet['history'])==0
           print('TESTE FINAL PAGBANK: status, autenticacao, cotacao, bloqueio, saldo e sem Pix real OK')
