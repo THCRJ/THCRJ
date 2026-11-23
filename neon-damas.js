@@ -10,7 +10,7 @@ const fmt=new Intl.NumberFormat('pt-BR');
 const stakeInput=$('np-damas-stake-value');
 if(!stakeInput)return;
 let auth=null,state=null,stake=100,selected=null,busy=false,lastDraw='',lastGameId='',lastStatus='',lastTurn='',serverOnline=false;
-let heartbeat=null,lastResponseAt=0,pollInFlight=false,actionEpoch=0,bootPending=false;
+let heartbeat=null,lastResponseAt=0,pollInFlight=false,actionEpoch=0,bootPending=false,lastOffersSig=null;
 function text(id,value){const el=$(id);if(el)el.textContent=String(value);}
 function note(message,kind=''){
   notice.textContent=message;
@@ -26,6 +26,7 @@ async function request(action,values={},timeout=13000){
   const response=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal:ctl.signal,cache:'no-store'});
   let data;try{data=await response.json()}catch{throw new Error('O servidor retornou uma resposta inválida')}
   if(!response.ok||!data?.ok)throw new Error(data?.error||'Falha na comunicação com o servidor');
+  lastResponseAt=Date.now();serverOnline=true;
   return data;
  }catch(e){
   if(e?.name==='AbortError')throw new Error('Conexão com as damas demorou demais. Toque em Reconectar.');
@@ -107,6 +108,9 @@ function renderBoard(){
 function waitingList(){
  const offers=Array.isArray(state?.offers)?state.offers:[];
  const list=$('np-damas-waiting-list');
+ const signature=JSON.stringify({offers:offers.map(x=>[x.player_id,x.nickname,x.stake]),balance:state?.player?.balance,playing:!!state?.game,busy});
+ if(signature===lastOffersSig)return;
+ lastOffersSig=signature;
  list.replaceChildren();
  if(!offers.length){
    const empty=document.createElement('div');
@@ -145,7 +149,9 @@ function stakeValue(){
 }
 function render(){
  if(!state)return;
- serverOnline=true;lastResponseAt=Date.now();
+ const stamp=lastResponseAt?new Date(lastResponseAt).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'}):'—';
+ text('np-damas-updated','Lista atualizada às '+stamp+' • atualização automática');
+ $('np-damas-refresh').disabled=busy||pollInFlight||bootPending;
  credits.textContent=fmt.format(state.player?.balance??0);
  text('np-damas-player-name',state.player?.nickname||'Jogador');
  text('np-damas-queue-count',Array.isArray(state.offers)?state.offers.length:0);
@@ -284,7 +290,7 @@ $('np-damas-reset').addEventListener('click',()=>{
  }
 });
 document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click',()=>{if(btn.dataset.tab==='checkers'&&state)render()}));
-heartbeat=setInterval(async()=>{
+async function refreshLobby(){
  if(!auth||busy||bootPending||pollInFlight||document.visibilityState==='hidden')return;
  pollInFlight=true;
  const currentEpoch=actionEpoch;
@@ -295,13 +301,19 @@ heartbeat=setInterval(async()=>{
     !==JSON.stringify([state?.game?.id,state?.game?.board,state?.game?.turn,state?.game?.status,state?.game?.forced_from]);
   state=latest;
   if(changed){selected=null;lastDraw=''}
-  render();
  }catch(e){
   serverOnline=false;
-  if(Date.now()-lastResponseAt>12000)note('Conexão com a lista interrompida. Tentando reconectar...','error');
+  if(Date.now()-lastResponseAt>12000)note('Conexão com a lista interrompida. Toque em Atualizar lista.','error');
  }finally{
   pollInFlight=false;
+  if(state)render();
  }
-},2800);
+}
+$('np-damas-refresh').addEventListener('click',refreshLobby);
+document.addEventListener('visibilitychange',()=>{
+ if(document.visibilityState==='visible')refreshLobby();
+});
+window.addEventListener('focus',refreshLobby);
+heartbeat=setInterval(refreshLobby,2800);
 bootstrap();
 })();
