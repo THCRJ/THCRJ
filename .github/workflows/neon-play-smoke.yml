@@ -12,7 +12,7 @@ on:
 jobs:
   test_connection:
     runs-on: ubuntu-latest
-    timeout-minutes: 4
+    timeout-minutes: 5
     steps:
       - name: Conferir GET, CORS e RPC do servidor de damas
         shell: bash
@@ -69,6 +69,9 @@ jobs:
           assert qa["queue"]["stake"]==735 and qa["game"] is None
           assert qb["queue"]["stake"]==735 and qb["game"] is None
           # Todos veem as ofertas e escolhem voluntariamente.
+          import time
+          print("Validando persistência após 66 segundos sem atividade dos criadores...")
+          time.sleep(66)
           offers=call("state",cc)["offers"]
           assert {x["player_id"] for x in offers}.issuperset({aa["id"],bb["id"]}), offers
           accepted=call("accept",bb,target=aa["id"])
