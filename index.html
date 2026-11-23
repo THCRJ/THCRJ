@@ -123,9 +123,9 @@
             <button type="button" id="np-damas-retry" class="np-damas-secondary" hidden style="margin-top:12px">↻ Reconectar</button>
           </div>
           <aside class="np-damas-side">
-            <div class="np-pix-preview" aria-label="Configuração da compra de créditos por Pix">
-              <div class="np-pix-preview-head"><h3>◇ Carteira Pix</h3><span>PRÉVIA · SEM COBRANÇA</span></div>
-              <p>Estamos preparando a compra de créditos por Pix. <strong>Nenhum pagamento real está habilitado.</strong></p>
+            <div class="np-pix-preview" aria-label="Preparação de pagamentos Pix com Mercado Pago">
+              <div class="np-pix-preview-head"><h3>◇ Mercado Pago · Pix</h3><span>AGUARDANDO APROVAÇÃO</span></div>
+              <p>Integração escolhida: <strong>Mercado Pago</strong>. Como as damas envolvem disputa de créditos e proposta de saque dos ganhos, o uso para dinheiro real depende de aprovação expressa do provedor e validação legal.</p>
               <label for="np-pix-amount" class="np-damas-label">VALOR DA COMPRA (R$)</label>
               <input id="np-pix-amount" class="np-damas-nickname" type="number" min="0.10" max="10000" step="0.01" inputmode="decimal" value="5.00" aria-describedby="np-pix-status"/>
               <div class="np-pix-amounts" role="group" aria-label="Valores ilustrativos de compra">
@@ -134,9 +134,9 @@
                 <button type="button" data-pix-amount="5.00">R$ 5</button>
                 <button type="button" data-pix-amount="10.00">R$ 10</button>
               </div>
-              <button type="button" id="np-pix-show" class="np-damas-secondary np-pix-preview-button">Visualizar compra</button>
-              <p id="np-pix-status" role="status" aria-live="polite">Pix desativado. Não envie dinheiro: ainda não existe QR Code ou chave para pagamento nesta página.</p>
-              <p class="np-pix-fine">Créditos do jogo continuam apenas demonstrativos. Saques reais dependem de validação legal e de um provedor que aceite o modelo da plataforma.</p>
+              <button type="button" id="np-pix-show" class="np-damas-secondary np-pix-preview-button">Visualizar compra pelo Mercado Pago</button>
+              <p id="np-pix-status" role="status" aria-live="polite">Integração Mercado Pago pendente de autorização. Ainda não há cobrança real, chave Pix nem QR Code nesta página.</p>
+              <p class="np-pix-fine">Não envie dinheiro. Os créditos do jogo continuam fictícios e sem saques. A aceitação de pagamentos a partir de R$ 0,10 e as taxas deverão ser confirmadas com o Mercado Pago.</p><p class="np-pix-fine"><a href="https://www.mercadopago.com.br/developers/pt/docs/checkout-api-orders/payment-integration/websites/pix" target="_blank" rel="noopener noreferrer">Documentação oficial de Pix do Mercado Pago</a></p>
             </div>
             <h3>🏆 Jogar valendo créditos</h3>
             <p>Partidas de 2 pessoas. Os dois apostam o mesmo valor. O vencedor recebe o pote inteiro. Nenhum crédito pode ser sacado ou convertido em dinheiro.</p>
