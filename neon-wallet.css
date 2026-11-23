@@ -35,3 +35,18 @@
 .wallet-aside-link strong{color:#d0fb9f}
 .wallet-aside-link p{font-size:12px;line-height:1.45}
 @media(max-width:660px){.wallet-grid,.wallet-summary{grid-template-columns:1fr}.wallet-operation{padding:14px}}
+/* PagBank: painel restrito ao ambiente Sandbox */
+.wallet-pagbank{border:1px solid #4c8bb7;border-radius:15px;background:linear-gradient(140deg,#182c41,#1c2135);padding:18px;margin:20px 0}
+.wallet-pagbank-top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px}
+.wallet-pagbank-top h3{margin:0;font-size:20px;color:#f1f8ff}
+.wallet-pagbank-top span{border-radius:30px;border:1px solid #4b84a8;color:#a8dff9;background:#182337;padding:5px 9px;font-size:10px;font-weight:850}
+.wallet-pagbank p{font-size:12px;line-height:1.6;color:#cadbea}
+.wallet-pagbank-status{padding:11px 12px;background:#202f46;border-left:3px solid #8ec9ed;border-radius:7px;font-weight:650}
+.wallet-pagbank .wallet-primary{background:#a3dbfa;color:#102639}
+.wallet-pagbank-result{margin:12px 0 0;border:1px solid #45637b;padding:13px;border-radius:12px;background:#172b3b}
+.wallet-pagbank-result label{display:block;margin:10px 0;font-size:12px;color:#cdefff;font-weight:700}
+.wallet-pagbank-result img{display:block;max-width:220px;width:100%;height:auto;margin:12px auto;padding:8px;background:#fff;border-radius:9px}
+.wallet-pagbank-result img[hidden]{display:none}
+.wallet-pagbank-result textarea{width:100%;min-height:67px;resize:vertical;box-sizing:border-box;padding:10px;border-radius:8px;background:#161d2b;border:1px solid #4a6d83;color:#d0f1ff;font-size:12px}
+.wallet-pagbank-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.wallet-pagbank-foot{font-size:11px!important;color:#aebcd0!important}
