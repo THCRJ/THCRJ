@@ -38,6 +38,22 @@ jobs:
           assert 'sandbox.api.pagseguro.com' not in html+js
           print('Front-end: Google-only, BRL, PagBank, sem créditos negociáveis nem dinheiro ativo')
           PY
+      - name: Conferir CDN de autenticação e prévia online
+        run: |
+          python3 - <<'PY'
+          import urllib.request
+          urls={
+            'Supabase JS SDK':'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js',
+            'Prévia Neon Play':'https://raw.githack.com/THCRJ/THCRJ/neon-play-teste/index.html'
+          }
+          for name,url in urls.items():
+              req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0'})
+              with urllib.request.urlopen(req,timeout=25) as response:
+                  prefix=response.read(128000)
+                  print(name,'HTTP',response.status,'bytes',len(prefix))
+                  assert response.status==200
+                  assert b'NEON' in prefix if name=='Prévia Neon Play' else len(prefix)>30000
+          PY
       - name: Verificar bloqueio dos serviços antigos e status Google OAuth
         run: |
           python3 - <<'PY'
