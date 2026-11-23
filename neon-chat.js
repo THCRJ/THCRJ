@@ -5,21 +5,19 @@
   const PUBLIC_KEY = 'sb_publishable_WDGTdqGJnGQqhkTo6jYw2g_Ic-EIc7a';
   const ROOM = 'neon-play-demo-lobby-2026-v1';
   const $ = id => document.getElementById(id);
-  const toggle = $('np-chat-toggle');
   const panel = $('np-chat-panel');
-  const close = $('np-chat-close');
   const log = $('np-chat-log');
   const form = $('np-chat-form');
   const input = $('np-chat-text');
   const name = $('np-chat-name');
   const send = $('np-chat-send');
-  const unreadBadge = $('np-chat-unread');
   const statusText = $('np-chat-status');
   const dot = $('np-chat-indicator');
   const online = $('np-chat-online');
   const retry = $('np-chat-retry');
-  if (!toggle || !panel || !form) return;
-  let channel = null, client = null, connected = false, unread = 0, lastSend = 0;
+  if (!panel || !form) return;
+
+  let channel = null, client = null, connected = false, lastSend = 0;
   let lastSending = false;
   const seen = new Set();
   const nicknameKey = 'np_demo_chat_nickname_v1';
@@ -72,11 +70,6 @@
     log.appendChild(bubble);
     while (log.childElementCount > 70) log.removeChild(log.firstElementChild);
     log.scrollTop = log.scrollHeight;
-    if (panel.hidden && !mine) {
-      unread = Math.min(99, unread+1);
-      unreadBadge.textContent = String(unread);
-      unreadBadge.hidden = false;
-    }
   };
   function presenceCount() {
     if (!channel) return;
@@ -147,23 +140,6 @@
       send.disabled = !connected;
     }
   }
-  function setOpened(open) {
-    panel.hidden = !open;
-    toggle.setAttribute('aria-expanded',String(open));
-    if (open) {
-      unread = 0;
-      unreadBadge.hidden = true;
-      log.scrollTop = log.scrollHeight;
-      input.focus({preventScroll:true});
-    } else {
-      toggle.focus({preventScroll:true});
-    }
-  }
-  toggle.addEventListener('click',()=>setOpened(panel.hidden));
-  close.addEventListener('click',()=>setOpened(false));
-  document.addEventListener('keydown',event=>{
-    if (event.key === 'Escape' && !panel.hidden) setOpened(false);
-  });
   form.addEventListener('submit', event=>{event.preventDefault();publish(input.value);});
   document.querySelectorAll('.np-chat-emoji button').forEach(button=>
     button.addEventListener('click',()=>publish(button.dataset.emoji))
