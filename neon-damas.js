@@ -7,9 +7,10 @@ const $=id=>document.getElementById(id);
 const boardEl=$('np-damas-board'),notice=$('np-damas-hint'),credits=$('np-damas-balance'),nameEl=$('np-damas-nickname');
 if(!boardEl || !notice || !credits || !nameEl)return;
 const fmt=new Intl.NumberFormat('pt-BR');
-const legalStakes=[100,500,1000,5000];
+const stakeInput=$('np-damas-stake-value');
+if(!stakeInput)return;
 let auth=null,state=null,stake=100,selected=null,busy=false,lastDraw='',lastGameId='',lastStatus='',lastTurn='',serverOnline=false;
-let heartbeat=null,lastResponseAt=0;
+let heartbeat=null,lastResponseAt=0,pollInFlight=false,actionEpoch=0,bootPending=false;
 function text(id,value){const el=$(id);if(el)el.textContent=String(value);}
 function note(message,kind=''){
   notice.textContent=message;
@@ -104,20 +105,50 @@ function renderBoard(){
  boardEl.replaceChildren(frag);
 }
 function waitingList(){
- const others=Array.isArray(state?.waiting)?state.waiting:[];
+ const offers=Array.isArray(state?.offers)?state.offers:[];
  const list=$('np-damas-waiting-list');
  list.replaceChildren();
- if(!others.length){const el=document.createElement('span');el.textContent='Nenhum jogador esperando agora';list.append(el);return}
- for(const item of others.slice(0,18)){
-  const el=document.createElement('span');el.textContent=(item.nickname||'Jogador')+' · '+fmt.format(item.stake||0)+' créditos';list.append(el)
+ if(!offers.length){
+   const empty=document.createElement('div');
+   empty.className='np-damas-empty';
+   empty.textContent='Nenhum desafio aberto neste momento. Publique o seu e convide um amigo!';
+   list.appendChild(empty);
+   return;
  }
+ for(const item of offers.slice(0,40)){
+   const value=Number(item.stake);
+   if(!Number.isInteger(value)||value<1||!item.player_id)continue;
+   const row=document.createElement('div');
+   row.className='np-damas-offer';
+   const info=document.createElement('div');
+   info.className='np-damas-offer-info';
+   const username=document.createElement('strong');
+   username.textContent=item.nickname||'Jogador';
+   const amount=document.createElement('span');
+   amount.textContent=fmt.format(value)+' créditos por jogador';
+   info.append(username,amount);
+   const button=document.createElement('button');
+   button.type='button';
+   button.className='np-damas-accept';
+   button.textContent=(state?.player?.balance??0)<value?'Saldo insuficiente':'Aceitar';
+   button.disabled=busy||!!state?.game||(state?.player?.balance??0)<value;
+   button.setAttribute('aria-label','Aceitar desafio de '+username.textContent+', valendo '+fmt.format(value)+' créditos fictícios');
+   button.addEventListener('click',()=>act('accept',{target:item.player_id}));
+   row.append(info,button);
+   list.append(row);
+ }
+}
+function stakeValue(){
+ const raw=stakeInput.value.trim();
+ const number=Number(raw);
+ return /^\d+$/.test(raw)&&Number.isSafeInteger(number)&&number>=1&&number<=100000000 ? number : null;
 }
 function render(){
  if(!state)return;
  serverOnline=true;lastResponseAt=Date.now();
  credits.textContent=fmt.format(state.player?.balance??0);
  text('np-damas-player-name',state.player?.nickname||'Jogador');
- text('np-damas-queue-count',Array.isArray(state.waiting)?state.waiting.length:0);
+ text('np-damas-queue-count',Array.isArray(state.offers)?state.offers.length:0);
  waitingList();
  const game=state.game,queue=state.queue;
  const inGame=!!game,active=game?.status==='active',finished=game?.status==='finished';
@@ -127,13 +158,14 @@ function render(){
  $('np-damas-play-actions').hidden=!active;
  $('np-damas-finished-actions').hidden=!finished;
  if(queue)text('np-damas-wait-stake',fmt.format(queue.stake||0));
+ const proposed=stakeValue();
  document.querySelectorAll('.np-damas-stake').forEach(btn=>{
    const value=Number(btn.dataset.stake);
-   btn.classList.toggle('selected',value===stake);
+   btn.classList.toggle('selected',value===proposed);
    btn.disabled=busy||(state.player.balance<value);
  });
- $('np-damas-start').disabled=busy||state.player.balance<stake;
- $('np-damas-start').textContent='Encontrar adversário • '+fmt.format(stake)+' créditos';
+ $('np-damas-start').disabled=busy||!!state.game||!!state.queue||proposed===null||state.player.balance<proposed;
+ $('np-damas-start').textContent='📣 Publicar desafio'+(proposed!==null?' de '+fmt.format(proposed)+' créditos':'');
  if(inGame){
   const opponent=game.you==='w'?game.black_name:game.white_name;
   text('np-damas-opponent',opponent||'Adversário');
@@ -155,22 +187,30 @@ function render(){
   }else{
    note('⏳ Vez de '+opponent+'. A partida atualiza automaticamente.','');
   }
- }else if(queue)note('🔎 Procurando outro jogador para '+fmt.format(queue.stake)+' créditos. Deixe a página aberta.','');
- else note('Escolha um valor, procure adversário online e dispute créditos fictícios.','');
+ }else if(queue)note('📣 Seu desafio está publicado. Outro jogador poderá aceitar pela lista de desafios.','ok');
+ else note('Defina o valor e publique seu desafio. Ou aceite um desafio da lista para jogar agora.','');
  const boardSig=JSON.stringify([game?.id,game?.status,game?.turn,game?.forced_from,game?.board,game?.last_move,busy,selected]);
  if(lastDraw!==boardSig){lastDraw=boardSig;renderBoard()}
 }
 async function act(action,values={}){
- if(busy || !auth)return;
- busy=true;renderBoard();
+ if(busy||!auth)return;
+ actionEpoch++;
+ busy=true;
+ renderBoard();
+ let errorMessage=null;
  try{
   const data=await request(action,values);
   state=data;
-  if(action==='move'||action==='leave'||action==='join')selected=null;
-  lastDraw='';render();
+  if(['move','leave','accept','offer'].includes(action))selected=null;
+  lastDraw='';
  }catch(e){
-  note(e.message,'error');
- }finally{busy=false;lastDraw='';renderBoard()}
+  errorMessage=e.message||'Não foi possível concluir a ação';
+ }finally{
+  busy=false;
+  lastDraw='';
+  if(state)render();
+  if(errorMessage)note(errorMessage,'error');
+ }
 }
 function clickSquare(i){
  const g=state?.game;
@@ -189,13 +229,14 @@ function clickSquare(i){
  }
 }
 async function bootstrap(){
+ bootPending=true;
  const saved=readAuth();
  if(saved?.id&&saved?.token)auth=saved;
  note('Conectando ao salão de damas...','');
  try{
   const d=await request('bootstrap',{nickname:document.querySelector('#np-chat-name')?.value||'Jogador'},14000);
   if(d.auth){auth=d.auth;writeAuth(auth)}
-  state=d;nameEl.value=d.player.nickname;stake=100;selected=null;render();
+  state=d;nameEl.value=d.player.nickname;stake=100;stakeInput.value='100';selected=null;render();
  }catch(e){
   note(e.message,'error');
   $('np-damas-retry').hidden=false;
@@ -203,11 +244,21 @@ async function bootstrap(){
     clearAuth();auth=null;
     note('Sua sessão antiga não foi aceita. Toque em Reconectar para criar outro perfil.','error');
   }
- }
+ }finally{bootPending=false}
 }
 $('np-damas-retry').addEventListener('click',()=>{ $('np-damas-retry').hidden=true;bootstrap() });
-document.querySelectorAll('.np-damas-stake').forEach(btn=>btn.addEventListener('click',()=>{stake=Number(btn.dataset.stake);render()}));
-$('np-damas-start').addEventListener('click',()=>act('join',{stake}));
+document.querySelectorAll('.np-damas-stake').forEach(btn=>btn.addEventListener('click',()=>{
+ stakeInput.value=btn.dataset.stake;
+ stake=Number(btn.dataset.stake);
+ if(state)render();
+}));
+stakeInput.addEventListener('input',()=>{if(state)render()});
+$('np-damas-start').addEventListener('click',()=>{
+ const value=stakeValue();
+ if(value===null){note('Digite um valor inteiro positivo de créditos virtuais.','error');return}
+ if(!state||value>state.player.balance){note('Seu saldo não cobre esse desafio.','error');return}
+ act('offer',{stake:value});
+});
 $('np-damas-cancel').addEventListener('click',()=>act('cancel'));
 $('np-damas-resign').addEventListener('click',()=>{
  if(window.confirm('Desistir da partida? Seu adversário receberá o prêmio de '+fmt.format(state.game.stake*2)+' créditos fictícios.'))act('resign')
@@ -234,10 +285,12 @@ $('np-damas-reset').addEventListener('click',()=>{
 });
 document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click',()=>{if(btn.dataset.tab==='checkers'&&state)render()}));
 heartbeat=setInterval(async()=>{
- if(!auth||busy||document.visibilityState==='hidden')return;
- busy=true;
+ if(!auth||busy||bootPending||pollInFlight||document.visibilityState==='hidden')return;
+ pollInFlight=true;
+ const currentEpoch=actionEpoch;
  try{
   const latest=await request('state',{},12000);
+  if(currentEpoch!==actionEpoch)return;
   const changed=JSON.stringify([latest.game?.id,latest.game?.board,latest.game?.turn,latest.game?.status,latest.game?.forced_from])
     !==JSON.stringify([state?.game?.id,state?.game?.board,state?.game?.turn,state?.game?.status,state?.game?.forced_from]);
   state=latest;
@@ -245,10 +298,9 @@ heartbeat=setInterval(async()=>{
   render();
  }catch(e){
   serverOnline=false;
-  if(Date.now()-lastResponseAt>12000)note('Sem conexão com a sala de damas. Tentando reconectar...','error');
+  if(Date.now()-lastResponseAt>12000)note('Conexão com a lista interrompida. Tentando reconectar...','error');
  }finally{
-  busy=false;
-  if(state){lastDraw='';renderBoard();}
+  pollInFlight=false;
  }
 },2800);
 bootstrap();
