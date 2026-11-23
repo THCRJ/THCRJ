@@ -1,0 +1,15 @@
+/* Neon Play — preparação visual para Pix, sem cobranças reais */
+.np-pix-preview{border:1px solid #675286;background:linear-gradient(135deg,#24203b,#1b1a2f);border-radius:15px;padding:13px;margin:0 0 20px}
+.np-pix-preview-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px}
+.np-pix-preview-head h3{font-size:17px;margin:0}
+.np-pix-preview-head span{background:#403653;color:#e6cffa;font-weight:800;font-size:10px;letter-spacing:.025em;padding:6px 8px;border-radius:15px}
+.np-pix-preview strong{color:#ffd1d1}
+.np-pix-preview p{font-size:12px;color:#d3c6e4;line-height:1.55}
+.np-pix-preview #np-pix-amount{margin-bottom:8px}
+.np-pix-amounts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.np-pix-amounts button{background:#322a49;border:1px solid #53446e;color:#f0e4ff;border-radius:9px;padding:9px 4px;font-size:12px;font-weight:800}
+.np-pix-amounts button:hover,.np-pix-amounts button.active{border-color:#caff76;color:#d6ffa4;background:#35402b}
+.np-pix-preview-button{width:100%;margin-top:12px;padding:12px 8px}
+#np-pix-status{border-left:3px solid #d7aa57;padding:7px 10px;background:#2b263a;color:#eee4f4}
+.np-pix-fine{font-size:11px!important;color:#ad9ac0!important}
+@media(max-width:390px){.np-pix-amounts{grid-template-columns:repeat(2,minmax(0,1fr))}}
