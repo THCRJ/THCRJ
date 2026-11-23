@@ -30,3 +30,35 @@
 .np-chat-send:disabled,.np-chat-emoji button:disabled{opacity:.45;cursor:not-allowed}
 .np-chat-safety{background:#1d1a2e;color:#aaa2bb;font-size:10px;text-align:center;padding:0 10px 11px}
 @media(max-width:520px){.np-chat-panel{right:8px;width:calc(100vw - 16px);max-height:75dvh}.np-chat-toggle{right:11px;bottom:calc(11px + env(safe-area-inset-bottom,0px));padding:12px 15px}.np-chat-panel{bottom:calc(68px + env(safe-area-inset-bottom,0px))}}
+
+/* Chat permanente abaixo dos controles da corrida (sem janela flutuante) */
+.np-chat-panel{
+  position:relative;
+  z-index:auto;
+  inset:auto;
+  bottom:auto;
+  right:auto;
+  width:100%;
+  max-width:none;
+  height:390px;
+  max-height:none;
+  margin-top:18px;
+  border:1px solid #494063;
+  border-radius:16px;
+  box-shadow:none;
+}
+.np-chat-log{min-height:150px}
+.np-chat-toggle,.np-chat-close,.np-chat-unread{display:none!important}
+@media(max-width:520px){
+  .np-chat-panel{
+    position:relative;
+    inset:auto;
+    right:auto;
+    bottom:auto;
+    width:100%;
+    height:365px;
+    max-height:none;
+    margin-top:14px;
+  }
+  .np-chat-name-row{flex-wrap:wrap}
+}
