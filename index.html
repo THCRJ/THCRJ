@@ -1,143 +1,151 @@
-<!doctype html><html lang="pt-BR"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#101020">
-<meta name="description" content="Neon Play: login Google, carteira em reais e PagBank selecionado.">
-<title>Neon Play | Google</title>
-<style>
-:root{color-scheme:dark;--bg:#0e0d1b;--panel:#171627;--border:#302d46;--muted:#a39eb9;--text:#fff;--purple:#9f75f8;--lime:#cbff79;--gold:#f8c86f;--red:#fa607a}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);background-image:radial-gradient(ellipse 70% 25% at 50% -15%,#4b285f50,transparent);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--text)}button{font:inherit;cursor:pointer}button:focus-visible,a:focus-visible{outline:3px solid var(--lime);outline-offset:3px}[hidden]{display:none!important}.app-shell{max-width:1040px;margin:0 auto}.topbar{min-height:86px;display:flex;align-items:center;justify-content:space-between;padding:12px 24px;border-bottom:1px solid #ffffff14}.brand{display:flex;gap:11px;align-items:center;text-decoration:none;color:white;font-size:21px;font-weight:900;letter-spacing:1px;line-height:1}.brand-logo{background:linear-gradient(145deg,#e8c2ff,#b989ff);color:#210b39;display:grid;place-items:center;width:43px;height:43px;border-radius:13px;box-shadow:0 5px 20px #a56bff35;font-size:27px}.brand-alt{color:var(--lime)}.brand small{display:block;color:#777286;font-size:9px;letter-spacing:3px;margin-top:7px}.wallet{background:#1b192c;border:1px solid #38324e;border-radius:14px;display:flex;align-items:center;gap:10px;padding:9px 14px}.wallet .coin{display:grid;place-items:center;background:linear-gradient(145deg,#ffe59a,#c58722);color:#9a540e;font-size:21px;border-radius:50%;height:31px;width:31px;box-shadow:inset 0 0 0 4px #f7d275}.wallet small{font-size:9px;color:var(--muted);letter-spacing:1px;display:block}.wallet b{font-size:18px;font-variant-numeric:tabular-nums}.main{padding:26px 24px 14px}.hero{position:relative;min-height:229px;border-radius:22px;border:1px solid #68518b;overflow:hidden;background:linear-gradient(113deg,#36204f,#261b47 65%,#44226b);display:flex;align-items:center;padding:29px 36px;box-shadow:0 20px 50px #0002}.hero:after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 83% 40%,#c990f533,transparent 37%);pointer-events:none}.hero-content{position:relative;z-index:1;max-width:620px}.eyebrow{display:flex;align-items:center;gap:7px;color:#dec2ff;font-size:12px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase}.dot{background:#c9ff71;width:7px;height:7px;border-radius:50%;box-shadow:0 0 12px #c9ff71}.hero h1{font-size:clamp(26px,4.2vw,45px);letter-spacing:-1.5px;line-height:1.12;margin:13px 0 7px}.hero h1 em{font-style:normal;color:var(--lime)}.hero p{color:#d3c4e5;font-size:14px;margin:0 0 19px}.bonus-button{display:inline-flex;gap:9px;align-items:center;padding:12px 17px;background:var(--lime);border:0;border-radius:11px;color:#16210b;font-size:13px;font-weight:850;box-shadow:0 8px 26px #baff6225}.bonus-button:disabled{background:#4b4a59;color:#c3c0cb;cursor:not-allowed;box-shadow:none}.hero-art{position:absolute;right:50px;top:40px;transform:rotate(-17deg);font-size:120px;opacity:.83;filter:drop-shadow(10px 14px 12px #0007)}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:15px 0 28px}.stat{background:#181727;border:1px solid #2b293f;border-radius:15px;padding:18px 21px}.stat small{font-size:10px;letter-spacing:1.4px;color:#aaa5be;font-weight:800}.stat strong{display:block;font-size:29px;margin:4px 0 2px;letter-spacing:-1px;font-variant-numeric:tabular-nums}.stat:first-child strong{color:var(--lime)}.stat span{font-size:11px;color:#857f9b}.tabs{display:flex;border-bottom:1px solid #383349;gap:14px;margin-bottom:25px}.tab{background:transparent;border:0;color:#9e98b6;padding:11px 15px 14px;font-weight:750;font-size:13px;border-bottom:2px solid transparent}.tab.active{border-color:var(--lime);color:var(--lime)}.section-head{display:flex;align-items:center;justify-content:space-between;margin:0 0 18px}.overline{font-size:10px;letter-spacing:2px;font-weight:850;color:#b193d9}.section-head h2{margin:6px 0 0;font-size:24px;letter-spacing:-.7px}.live-label{color:#cfff7e;border:1px solid #42542e;border-radius:40px;background:#252c20;padding:7px 10px;font-size:11px;font-weight:750}.game-selector{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-bottom:18px}.game-tile{background:#1a192c;border:1px solid #343044;border-radius:16px;padding:17px;display:flex;flex-direction:column;align-items:flex-start;gap:5px;color:#fff;text-align:left;transition:background .15s,border-color .15s}.game-tile.active{background:#2c2343;border-color:#bb8cff;box-shadow:0 0 0 1px #9e70d33c}.tile-icon{font-size:27px;margin-bottom:4px}.game-tile b{font-size:15px}.game-tile small{font-size:11px;color:#a5a0b9}.game-table{border-radius:20px;border:1px solid #373047;background:radial-gradient(ellipse 60% 33% at 50% 30%,#39294d67,transparent),#171625;overflow:hidden}.table-title{display:flex;align-items:center;justify-content:space-between;padding:22px 27px 0}.table-title small{color:#ba9bdf;letter-spacing:1.5px;font-weight:800;font-size:10px}.table-title h3{margin:5px 0 0;font-size:21px}.play-badge{font-size:10px;color:#a6a1b6;font-weight:750;letter-spacing:1px}.stage{display:flex;align-items:center;justify-content:center;min-height:255px;padding:15px 18px 5px}.dice-stage{gap:24px}.dice-face{font-size:110px;line-height:1;filter:drop-shadow(0 12px 15px #0009);color:#ead9ff}.slots-stage{gap:12px}.slots-stage div{width:94px;height:105px;display:grid;place-items:center;border:2px solid #6b547a;border-radius:14px;background:linear-gradient(#382843,#1d1a2a);box-shadow:inset 0 0 14px #0005;font-size:52px}.result{margin:0 auto 20px;text-align:center;min-height:25px;color:#bcb5c9;padding:0 15px;font-size:13px;font-weight:750}.result.positive{color:#c9ff7a}.result.negative{color:#fc91a2}.result.neutral{color:#e8c98b}.game-controls{border-top:1px solid #373046;padding:23px 27px 25px}.choice-label,.bet-line{font-size:11px;letter-spacing:1px;font-weight:800;color:#aaa4b9}.choices{display:flex;gap:10px;margin:10px 0 23px}.choice{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:13px;background:#252339;border:1px solid #494259;border-radius:10px;color:#e5dfed;font-weight:750;font-size:13px}.choice.selected{background:#3a3050;border-color:#bc92f8;box-shadow:inset 0 0 0 1px #7b5798}.bet-line{display:flex;justify-content:space-between}.bet-range{color:#79748e;font-weight:500;letter-spacing:0}.chips{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:11px 0 18px}.chip{padding:13px 4px;border:1px solid #51465e;border-radius:10px;background:#292637;color:#e6e1eb;font-weight:800}.chip.selected{background:#cafa82;color:#20230d;border-color:#cafa82}.play-button{width:100%;display:flex;justify-content:center;align-items:center;gap:16px;background:linear-gradient(95deg,#a56dff,#c98dff);border:0;color:#1c0c2e;font-weight:900;letter-spacing:.7px;border-radius:13px;padding:17px;font-size:14px;box-shadow:0 8px 27px #a971f524}.play-button:disabled{filter:grayscale(1);opacity:.55;cursor:not-allowed}.play-button span{font-size:20px}.odds{text-align:center;font-size:11px;color:#837e96;margin:14px 0 0}.history{background:#191729;border:1px solid #353046;border-radius:16px;padding:12px 17px}.history-empty{text-align:center;padding:40px 10px;color:#958fa7}.history-row{padding:13px 5px;display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:1px solid #2f2b3f}.history-row:last-child{border-bottom:none}.history-row b{font-size:13px}.history-row small{display:block;color:#9790ac;font-size:11px;margin-top:5px}.history-amount{white-space:nowrap;font-size:15px;font-weight:850}.history-amount.positive{color:var(--lime)}.history-amount.negative{color:#ff718b}.history-amount.neutral{color:#d0b8ec}.rules-card{background:#191729;border:1px solid #353046;border-radius:14px;padding:17px 20px;margin-bottom:10px}.rules-card h3{font-size:16px;margin:0 0 8px}.rules-card p{color:#aaa4bc;font-size:13px;line-height:1.6;margin:0}footer{font-size:11px;color:#79738d;text-align:center;padding:28px 0 10px}footer strong{color:#c2a2ee}.demo-banner,.error-banner{font-size:12px;padding:11px 13px;border-radius:9px;margin:0 0 12px}.demo-banner{background:#30283e;border:1px solid #75579b;color:#e6d4ff}.error-banner{background:#3a202e;border:1px solid #ab526f;color:#ffceda}
-@media(max-width:680px){.topbar{padding:11px 15px;min-height:72px}.brand{font-size:18px}.brand-logo{height:36px;width:36px;font-size:20px}.brand small{font-size:8px}.wallet{padding:7px 9px;gap:7px}.wallet .coin{height:27px;width:27px;font-size:15px}.wallet b{font-size:15px}.main{padding:14px 13px 8px}.hero{min-height:224px;padding:22px 20px;border-radius:18px}.eyebrow{font-size:10px}.hero h1{font-size:31px;max-width:240px}.hero p{font-size:12px;max-width:230px;line-height:1.55}.hero-art{right:11px;top:76px;font-size:65px;opacity:.47}.bonus-button{padding:12px;font-size:11px}.stats{gap:7px;margin:11px 0 22px}.stat{padding:12px 11px;border-radius:12px}.stat small{font-size:8px}.stat strong{font-size:23px}.stat span{font-size:9px}.tabs{gap:0;justify-content:space-between}.tab{font-size:12px;padding:12px 13px}.section-head h2{font-size:21px}.game-selector{gap:7px}.game-tile{padding:12px 8px;border-radius:12px;gap:4px}.tile-icon{font-size:23px}.game-tile b{font-size:12px}.game-tile small{font-size:9px}.table-title{padding:18px 17px 0}.table-title h3{font-size:18px}.table-title small,.play-badge{font-size:9px}.play-badge{max-width:85px;text-align:right}.game-controls{padding:20px 15px}.stage{min-height:239px}.choice{padding:13px 7px}.slots-stage div{width:81px;height:90px;font-size:43px}.dice-face{font-size:94px}.chips{gap:5px}.chip{font-size:12px}.play-button{padding:15px;font-size:13px}}
-@media(max-width:360px){.hero h1{font-size:27px}.hero-art{font-size:52px}.stat strong{font-size:20px}.wallet small{font-size:8px}.choices{gap:6px}.slots-stage div{width:72px}}
-
-/* Corrida de cavalos: identidade original Neon Play, inspirada no formato de corrida de arcade. */
-.horses-stage{width:100%;max-width:940px;padding:5px 5px 0}
-.race-board{width:100%;padding:12px;background:linear-gradient(180deg,#20263b,#172b28);border:1px solid #48566a;border-radius:15px;box-shadow:inset 0 0 26px #06131680}
-.race-heading{display:flex;justify-content:space-between;align-items:center;gap:8px;color:#e5d7b7;font-size:10px;font-weight:800;letter-spacing:1px;margin:0 0 11px}
-.race-heading b{font-size:10px;color:#bffa7a;text-align:right}
-.race-lanes{display:grid;gap:5px}
-.race-lane{display:grid;grid-template-columns:29px minmax(0,1fr) 76px;gap:7px;align-items:center;border-radius:8px;min-height:37px;background:#1f4236a8;border:1px solid #ffffff14;padding:3px 7px 3px 4px}
-.race-lane:nth-child(even){background:#27483a9c}
-.race-lane.race-selected{outline:1px solid #bafb74;background:#35513f}
-.race-lane.race-winner{background:#607c38;box-shadow:inset 0 0 0 1px #d2fa86}
-.race-number,.horse-number{display:inline-grid;place-items:center;width:25px;height:25px;border-radius:6px;color:#fff;font-weight:900;font-size:13px;text-shadow:0 1px 1px #0005}
-.horse-1{background:#eb5366}.horse-2{background:#398ef0}.horse-3{background:#f7b23e;color:#312009}.horse-4{background:#7257e8}.horse-5{background:#36ba9c;color:#0d302a}.horse-6{background:#e6ebf5;color:#1f2743}
-.race-track{height:31px;position:relative;min-width:0;border-right:4px dashed #fff9;background:repeating-linear-gradient(90deg,transparent 0 26px,#ffffff09 26px 27px);overflow:hidden}
-.race-runner{position:absolute;top:50%;left:0;transform:translateY(-50%);font-size:27px;line-height:1;filter:drop-shadow(0 2px 2px #000a);will-change:left}
-.race-lane.race-winner .race-runner{filter:drop-shadow(0 0 7px #e5ff94)}
-.race-lane-name{font-size:10px;font-weight:800;color:#f4efde;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.race-caption{display:flex;justify-content:space-between;color:#b9b4aa;font-size:9px;letter-spacing:1.5px;padding:7px 5px 0}
-.horse-choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
-.horse-choice{min-width:0;display:flex;flex-direction:column;align-items:stretch;justify-content:center;text-align:left;padding:10px 11px;gap:5px}
-.horse-choice strong{font-size:13px;overflow-wrap:anywhere}
-.horse-top{display:flex;align-items:center;justify-content:space-between;gap:4px}
-.horse-multiplier{font-size:19px;color:#ceff88;font-weight:900}
-.horse-small{font-size:10px;color:#9790ad}
-.horse-choice.selected .horse-multiplier{color:#fff}
-.choice:disabled,.chip:disabled,.game-tile:disabled{cursor:not-allowed;opacity:.78}
-@media(max-width:680px){.stage{padding:10px 6px 6px;min-height:320px}.race-board{padding:9px 6px}.race-heading{font-size:8px}.race-heading b{font-size:8px}.race-lane{grid-template-columns:24px minmax(0,1fr) 60px;gap:4px;padding:3px;min-height:35px}.race-number{width:22px;height:22px;font-size:11px}.race-lane-name{font-size:9px}.race-runner{font-size:24px}.race-track{height:30px}.horse-choices{gap:7px}.horse-choice{padding:9px 7px}.horse-choice strong{font-size:11px}.horse-multiplier{font-size:17px}.horse-small{font-size:8px}}
-@media(max-width:345px){.horse-choices{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(prefers-reduced-motion:reduce){.race-runner{transition:none}}
-
-
-/* Pista 3D WebGL: hardware-accelerated and fully self-contained. */
-.race-viewport{position:relative;height:360px;overflow:hidden;border-radius:13px;background:linear-gradient(180deg,#122337,#315747);border:1px solid #577361;box-shadow:inset 0 0 60px #09091550}
-#race-canvas{display:block;width:100%;height:100%;touch-action:pan-y}
-.race-hud{pointer-events:none;position:absolute;inset:10px 10px auto;display:flex;justify-content:space-between;align-items:center;gap:8px}
-.three-d-badge{background:#0c1d1cd9;border:1px solid #9edc72a5;color:#d9ff9f;border-radius:8px;font-weight:850;font-size:10px;letter-spacing:1.1px;padding:8px 10px;box-shadow:0 2px 12px #0007}
-.camera-button{pointer-events:auto;border:1px solid #d4c6f598;border-radius:9px;color:#f5edff;background:#151a29dc;padding:8px 10px;font-size:10px;font-weight:800}
-.camera-button:focus-visible{outline:2px solid #caff81}
-.race-standings{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;margin:8px 0 0}
-.race-standing{padding:7px 5px;background:#151c28;border:1px solid #3a4b57;border-radius:8px;min-width:0;color:#f1ebfa;font-size:10px;text-align:center}
-.race-standing.selected{border-color:#caff81;box-shadow:inset 0 0 0 1px #7cad55}
-.race-standing.winner{background:#344b29;border-color:#d3ff7e}
-.race-standing .number{font-weight:950;font-size:13px}.race-standing .rank{display:block;color:#b5b1c5;font-size:9px;margin-top:2px}
-.race-progress{height:3px;background:#41505e;border-radius:2px;overflow:hidden;margin-top:6px}.race-progress>span{display:block;height:100%;background:#d3ff91;width:0%;transition:width .12s linear}
-@media(max-width:680px){.race-viewport{height:270px}.race-standings{gap:3px}.race-standing{padding:7px 2px;font-size:9px}.race-standing .number{font-size:11px}.race-heading{flex-wrap:wrap}.three-d-badge,.camera-button{font-size:9px;padding:7px}}
-@media(max-width:360px){.race-viewport{height:225px}.race-standing .rank{font-size:8px}}
-
-/* Aposta bloqueada quando ultrapassa o limite transparente da escolha. */
-.chip:disabled{opacity:.3;cursor:not-allowed}
-.horse-small{color:#d0c3ef}
-
-
-
-#gate{display:grid;place-items:center;min-height:100vh;padding:20px}
-.gate-card{max-width:450px;width:100%;border:1px solid #5b4b7d;border-radius:23px;background:linear-gradient(140deg,#29213e,#191626);padding:32px;text-align:center}
-.gate-card h1{font-size:32px;margin:13px 0}.gate-card p{font-size:13px;color:#cec5dc;line-height:1.7}
-.google-btn{width:100%;border:1px solid #fff;background:#fff;color:#242331;padding:15px;border-radius:12px;font-weight:850;margin:16px 0}
-#auth-message{color:#c8b9d6;font-size:12px;min-height:22px}
-.account-bar{display:flex;align-items:center;gap:12px}
-.account-bar small{color:#cbbddc;max-width:160px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap}
-.account-bar button{padding:8px 13px;border:1px solid #524665;background:#2b2440;border-radius:9px;color:white}
-.site-tabs{display:flex;flex-wrap:wrap;gap:7px;margin:20px 0}
-.site-tabs button{padding:11px;border:1px solid #484052;border-radius:10px;color:#c8bedc;background:#242033;font-weight:750;font-size:12px}
-.site-tabs button.active{background:#304127;border-color:#b4ed7d;color:#dbffb4}
-.finance-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.finance-box,.neon-notice{border:1px solid #463f5b;border-radius:15px;padding:19px;background:#201b31;margin-bottom:12px}
-.finance-box small{color:#bdb2d5;font-size:11px}.finance-box strong{color:#cbff79;display:block;font-size:27px;margin:10px 0}
-.finance-box p,.neon-notice p,.text-soft{color:#c4b9d2;font-size:13px;line-height:1.65}
-.finance-box button{padding:12px;width:100%;border-radius:10px;background:#383140;border:1px solid #655d6d;color:#aaa1b4;cursor:not-allowed}
-.pagbank-only{border:1px solid #3a7896;background:#1d3144;border-radius:11px;padding:15px;margin:12px 0;color:#cdeeff}
-.free-game-stage{min-height:185px;display:flex;align-items:center;justify-content:center;padding:12px}
-.free-game-stage .dice-face{font-size:83px}
-.free-game-controls{padding:18px;border-top:1px solid #423851}
-.game-options{display:flex;gap:7px;flex-wrap:wrap;margin:13px 0}
-.game-options button{flex:1;padding:11px;min-width:70px;background:#2f2843;color:white;border:1px solid #514464;border-radius:9px}
-.game-options button.chosen{background:#526934;color:#fff;border-color:#caff80}
-.game-feedback{padding:15px;text-align:center;color:#e6d7ef;font-size:13px;min-height:52px}
-#race-stage .race-board{width:100%}#race-stage .race-viewport{height:290px}
-.activity-entry{display:flex;justify-content:space-between;gap:9px;padding:12px;border-bottom:1px solid #443852;font-size:12px}
-.activity-entry small{color:#b9acc9}
-@media(max-width:640px){.finance-grid{grid-template-columns:1fr}.gate-card{padding:23px}.account-bar small{display:none}.site-tabs button{padding:9px}.stats{grid-template-columns:repeat(2,1fr)}}
-</style></head><body>
-<div id="gate"><div class="gate-card">
-  <div class="brand" style="justify-content:center"><span class="brand-logo">◆</span><span>NEON<span class="brand-alt">PLAY</span></span></div>
-  <h1>Entre com Google</h1>
-  <p>Utilize uma conta Google do seu celular para acessar o Neon Play. Sem contas de visitante ou senhas locais.</p>
-  <button type="button" id="google-login" class="google-btn">🌐 Continuar com Google</button>
-  <button type="button" id="session-retry" class="google-btn" style="background:#2f2944;color:#eaddf6;border-color:#675478;margin:0" hidden>✓ Já entrei com Google · Verificar acesso</button>
-  <p id="auth-message" role="status">Verificando acesso seguro…</p>
-</div></div>
-<div class="app-shell" id="site" hidden>
-<header class="topbar"><div class="brand"><span class="brand-logo">◆</span><span>NEON<span class="brand-alt">PLAY</span><small>ÁREA GOOGLE</small></span></div>
-<div class="account-bar"><small id="google-email">Google</small><button id="logout" type="button">Sair</button></div></header>
-<main class="main">
-<section class="hero"><div class="hero-content"><div class="eyebrow"><span class="dot"></span> Seu espaço Neon Play</div>
-<h1>O jogo começa <em>aqui.</em></h1><p>Conta Google, carteira em reais e PagBank como único provedor planejado. Operações financeiras ainda não habilitadas.</p></div><div class="hero-art">♟️</div></section>
-<nav class="site-tabs" aria-label="Seções"><button class="active" data-tab="wallet">◇ Carteira</button><button data-tab="games">🎮 Jogos</button><button data-tab="checkers">♟️ Damas</button><button data-tab="history">◷ Histórico</button><button data-tab="rules">ⓘ Regras</button></nav>
-<section id="wallet-panel" class="panel"><div class="section-head"><div><div class="overline">FINANÇAS</div><h2>Minha carteira</h2></div><span class="live-label">BRL · R$</span></div>
-<p class="text-soft">Valores monetários em reais, separados dos jogos. Não há pontos nem moedas conversíveis.</p>
-<div class="finance-grid">
-<div class="finance-box"><small>SALDO EM REAIS REGISTRADO</small><strong id="balance">Carregando…</strong><p id="balance-note">Conferindo no banco de dados…</p></div>
-<div class="finance-box"><small>TRANSAÇÕES REAIS</small><strong style="font-size:20px;color:#eee2ff">Bloqueadas</strong><p>Ainda não há depósitos nem retiradas habilitados.</p></div>
-</div>
-<div class="pagbank-only"><b>PagBank · Pix</b> — único provedor financeiro selecionado.</div>
-<div class="finance-grid">
-<div class="finance-box"><h3>Depositar via Pix</h3><p>A ativação depende da autorização da operação financeira.</p><button disabled type="button">Depósito indisponível</button></div>
-<div class="finance-box"><h3>Retirar via Pix</h3><p>Saques requerem autorização separada e verificação de identidade.</p><button disabled type="button">Retirada indisponível</button></div>
-</div>
-<div class="neon-notice"><p>O saldo é consultado no banco e só pode ser alterado por operações futuras validadas pelo servidor. Nenhum pagamento real está disponível nesta versão.</p></div>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0d101b">
+<meta name="description" content="Neon Play: damas online com amigos, chat ao vivo e 1.000 créditos fictícios iniciais por conta Google. Sem dinheiro real.">
+<title>Neon Play · Damas Online</title>
+<link rel="stylesheet" href="./neon-damas-google.css?v=20261123-1">
+</head>
+<body>
+<section class="login-shell" id="login-gate" aria-label="Entrar com Google">
+  <div class="login-card">
+    <div class="logo"><span class="logo-mark">♟</span><span>NEON<b>PLAY</b></span></div>
+    <h1>Seu próximo desafio começa aqui.</h1>
+    <p>Damas online, desafios entre amigos e chat ao vivo. Entre com sua conta Google e receba <strong style="color:#c2f981">1.000 créditos fictícios</strong> para começar.</p>
+    <button type="button" class="google-btn" id="login-btn">Continuar com Google</button>
+    <button type="button" class="retry" id="login-retry" hidden>Já entrei · Verificar acesso</button>
+    <div class="login-help" id="login-status" role="status" aria-live="polite">Carregando acesso seguro…</div>
+    <p style="font-size:11px">Créditos apenas para diversão. Sem depósitos, Pix ou saques.</p>
+  </div>
 </section>
-<section id="games-panel" class="panel" hidden><div class="section-head"><div><div class="overline">SEM APOSTAS OU PRÊMIOS</div><h2>Jogos recreativos</h2></div></div>
-<div class="stats"><div class="stat"><small>PARTIDAS</small><strong id="plays">0</strong><span>nesta sessão</span></div><div class="stat"><small>ACERTOS</small><strong id="wins">0</strong><span>nesta sessão</span></div><div class="stat"><small>TRANSAÇÕES</small><strong>R$ 0</strong><span>nenhuma cobrança</span></div></div>
-<div class="game-selector"><button class="game-tile active" data-game="race"><span class="tile-icon">🏇</span><b>Corrida 3D</b><small>Escolha o cavalo</small></button>
-<button class="game-tile" data-game="dice"><span class="tile-icon">🎲</span><b>Dados</b><small>Adivinhe a soma</small></button>
-<button class="game-tile" data-game="slots"><span class="tile-icon">🎰</span><b>Símbolos</b><small>Combine figuras</small></button></div>
-<div class="game-table"><div class="table-title"><div><small>ENTRETENIMENTO GRATUITO</small><h3 id="game-title">Corrida de cavalos 3D</h3></div><span class="play-badge">SEM PREMIAÇÃO</span></div>
-<div class="free-game-stage" id="race-stage"><div class="race-board"><div class="race-heading"><span>🏁 PISTA NEON • 6 COMPETIDORES</span><b id="race-status">PRONTO</b></div><div class="race-viewport"><canvas id="race-canvas" aria-label="Corrida 3D" role="img"></canvas><div class="race-hud"><span class="three-d-badge">3D</span><button id="camera-button" type="button" class="camera-button">🎥 Alternar câmera</button></div></div><p class="text-soft" id="race-caption">Escolha um cavalo.</p></div></div>
-<div class="free-game-stage" id="dice-stage" hidden><span id="die-1" class="dice-face">⚀</span><span id="die-2" class="dice-face">⚀</span></div>
-<div class="free-game-stage" id="slots-stage" hidden><div class="slots-stage"><div id="symbol-1">🍒</div><div id="symbol-2">🔔</div><div id="symbol-3">🍀</div></div></div>
-<div id="game-result" class="game-feedback">Escolha uma opção para começar.</div><div class="free-game-controls"><b class="choice-label" id="choice-label">ESCOLHA SEU CAVALO</b><div id="game-options" class="game-options"></div><button id="free-play" type="button" class="play-button">JOGAR GRÁTIS <span>↗</span></button></div></div></section>
-<section id="checkers-panel" class="panel" hidden><div class="section-head"><div><div class="overline">DAMAS ONLINE</div><h2>♟️ Damas</h2></div></div><div class="neon-notice"><h3>Multiplayer em atualização</h3><p>As damas antigas dependiam de perfis anônimos e créditos. Foram desativadas. O jogo precisará ser adaptado ao login Google para voltar, sem créditos nem apostas.</p></div></section>
-<section id="history-panel" class="panel" hidden><div class="section-head"><div><div class="overline">ATIVIDADE</div><h2>Histórico</h2></div></div><div class="neon-notice"><p>Não há transações financeiras disponíveis.</p></div><div class="history" id="game-history"><p>Suas partidas recreativas aparecerão aqui nesta sessão.</p></div></section>
-<section id="rules-panel" class="panel" hidden><div class="section-head"><div><div class="overline">SEGURANÇA</div><h2>Como funciona</h2></div></div>
-<div class="rules-card"><h3>Google obrigatório</h3><p>É necessário entrar com Google. Não há visitante, senhas próprias nem perfis de teste.</p></div>
-<div class="rules-card"><h3>Carteira BRL</h3><p>A carteira começa em R$ 0,00; a visualização depende de autenticação e registro no banco. Nenhum jogo gera saldo monetário.</p></div>
-<div class="rules-card"><h3>PagBank exclusivo</h3><p>O PagBank é o único provedor selecionado. O token Sandbox não autoriza transferências em dinheiro real.</p></div>
-<div class="rules-card"><h3>Jogos gratuitos</h3><p>Os jogos solo são apenas recreativos e não oferecem apostas nem premiações. Damas online está temporariamente indisponível.</p></div></section>
-<footer><strong>NEON PLAY</strong> · Conta Google · PagBank planejado · Sem transações reais habilitadas</footer>
-</main></div>
+<div id="app" hidden>
+<header class="site-header">
+  <div class="wrap head-content">
+    <div class="logo" aria-label="Neon Play Damas Online">
+      <span class="logo-mark">♟</span>
+      <span>NEON<b>PLAY</b><small>DAMAS ONLINE</small></span>
+    </div>
+    <div class="account-info">
+      <div class="credit-pill" aria-live="polite" title="Saldo virtual — sem valor monetário">
+        <small>SALDO</small><strong id="credits">1.000</strong><span aria-hidden="true">✦</span>
+      </div>
+      <button class="icon-button" type="button" id="btn-logout" title="Sair da conta Google" aria-label="Sair da conta Google">Sair</button>
+    </div>
+  </div>
+</header>
+<main class="wrap shell">
+  <div class="intro">
+    <div>
+      <div class="eyebrow">MULTIPLAYER · TEMPO REAL</div>
+      <h1>Entre no jogo.</h1>
+      <p>Damas com amigos, desafios públicos e conversa ao vivo. <strong id="user-email" style="color:#bec7d6;font-weight:600"></strong></p>
+    </div>
+    <div class="online-mark">Damas online</div>
+  </div>
+  <div class="layout">
+    <section class="panel board-panel" aria-label="Tabuleiro de damas">
+      <div class="board-heading">
+        <div><h2>♟ Tabuleiro</h2><p id="game-stake">Partidas com créditos fictícios</p></div>
+        <div class="status-pill" id="turn-status">Conectando…</div>
+      </div>
+      <div class="players">
+        <div class="player">
+          <span class="player-avatar" aria-hidden="true">🙂</span>
+          <div><small class="player-label">VOCÊ</small><b id="own-name">Conectando…</b></div>
+        </div>
+        <div class="vs">VS</div>
+        <div class="player right">
+          <span class="player-avatar" aria-hidden="true">♟</span>
+          <div><small class="player-label">ADVERSÁRIO</small><b id="opponent-name">Aguardando rival</b></div>
+        </div>
+      </div>
+      <div class="board-container"><div class="board" id="board" role="group" aria-label="Tabuleiro de damas com 64 casas"></div></div>
+      <div class="board-note" role="status" id="board-hint" aria-live="polite">Conectando ao salão de damas…</div>
+      <div class="match-strip" id="match-actions" hidden>
+        <strong>PARTIDA EM ANDAMENTO</strong>
+        <button type="button" id="btn-draw">Propor empate</button>
+        <button type="button" id="btn-accept-draw" hidden>Aceitar empate</button>
+        <button type="button" id="btn-decline-draw" hidden>Recusar empate</button>
+        <button type="button" id="btn-timeout" hidden>Vitória por ausência</button>
+        <button type="button" id="btn-resign" class="danger">Desistir</button>
+      </div>
+      <div class="match-strip" id="finished-actions" hidden>
+        <strong>PARTIDA CONCLUÍDA</strong>
+        <button type="button" id="btn-leave">Voltar ao salão</button>
+      </div>
+    </section>
+    <aside class="sidebar" aria-label="Desafios e chat">
+      <section class="panel sidebar-section">
+        <div class="section-top">
+          <h3>Seu perfil</h3>
+          <span class="mini-tag">GOOGLE</span>
+        </div>
+        <label class="label" for="nick-input">APELIDO NO JOGO</label>
+        <div class="nickname-row">
+          <input id="nick-input" class="text-input" type="text" maxlength="18" autocomplete="nickname" placeholder="Seu apelido"/>
+          <button id="btn-nick" class="secondary" type="button">Salvar</button>
+        </div>
+      </section>
+      <section class="panel sidebar-section">
+        <div class="section-top">
+          <h3>Desafios online</h3>
+          <button id="btn-refresh" class="secondary" type="button" aria-label="Atualizar desafios">↻</button>
+        </div>
+        <div id="create-area">
+          <label class="label" for="stake-input">CRÉDITOS POR JOGADOR</label>
+          <div class="stake-grid" aria-label="Valores de desafio">
+            <button type="button" class="stake-option" data-amount="50">50</button>
+            <button type="button" class="stake-option selected" data-amount="100">100</button>
+            <button type="button" class="stake-option" data-amount="250">250</button>
+            <button type="button" class="stake-option" data-amount="500">500</button>
+          </div>
+          <input id="stake-input" class="text-input" inputmode="numeric" type="number" min="1" max="100000" step="1" value="100" aria-label="Quantidade de créditos por jogador"/>
+          <p class="label-note">Você e seu adversário entram com o mesmo valor fictício. O vencedor recebe o total.</p>
+          <button type="button" class="primary" id="btn-create">+ Criar desafio</button>
+        </div>
+        <div id="queue-area" class="queue-status" hidden>
+          <b>Seu desafio está publicado</b>
+          <div>Valor: <b id="queue-amount">100</b> créditos por jogador.</div>
+          <button type="button" class="secondary" id="btn-cancel">Cancelar desafio</button>
+        </div>
+        <div class="section-top" style="margin:18px 0 10px">
+          <h3 style="font-size:13px">Aguardando jogadores</h3>
+          <span class="mini-tag" id="offers-count">0</span>
+        </div>
+        <div class="offers" id="offers" aria-live="polite">
+          <div class="empty">Verificando desafios disponíveis…</div>
+        </div>
+      </section>
+      <section class="panel chat-card" aria-label="Chat público interativo">
+        <div class="chat-head">
+          <h3>💬 Conversa ao vivo</h3>
+          <span>Sala pública</span>
+        </div>
+        <div class="chat-messages" id="chat-messages" role="log" aria-live="polite" aria-relevant="additions">
+          <div class="empty">Conectando ao chat…</div>
+        </div>
+        <div class="chat-compose">
+          <div class="chat-quick" aria-label="Emojis">
+            <button type="button" class="emoji-shortcut" data-emoji="👏" aria-label="Adicionar aplausos">👏</button>
+            <button type="button" class="emoji-shortcut" data-emoji="🔥" aria-label="Adicionar fogo">🔥</button>
+            <button type="button" class="emoji-shortcut" data-emoji="😄" aria-label="Adicionar sorriso">😄</button>
+            <button type="button" class="emoji-shortcut" data-emoji="🏆" aria-label="Adicionar troféu">🏆</button>
+          </div>
+          <form id="chat-form" class="chat-form">
+            <input class="text-input" id="chat-text" name="message" required type="text" maxlength="180" placeholder="Escreva sua mensagem..." autocomplete="off" aria-label="Mensagem para o chat"/>
+            <button type="submit" id="chat-send" aria-label="Enviar mensagem">Enviar</button>
+          </form>
+          <p class="chat-alert" id="chat-status" role="status">Chat disponível após login Google</p>
+        </div>
+      </section>
+    </aside>
+  </div>
+  <footer class="footnote">NEON PLAY · 1.000 créditos iniciais por conta Google · Saldo fictício sem valor financeiro · Sem Pix, depósitos ou saques.</footer>
+</main>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js" defer></script>
-<script src="./neon-race-3d.js" defer></script>
-<script src="./neon-auth-app.js?v=20261123-fix1" defer></script>
-</body></html>
+<script src="./neon-damas-google.js?v=20261123-1" defer></script>
+</body>
+</html>
