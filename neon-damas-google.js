@@ -146,7 +146,6 @@ function render(){
  const player=state.player,game=state.game,queue=state.queue;
  $('credits').textContent=fmt.format(player.balance);
  $('own-name').textContent=player.nickname;
- $('player-name-top').textContent=player.nickname;
  if(document.activeElement!==$('nick-input'))$('nick-input').value=player.nickname;
  $('opponent-name').textContent=game?(game.you==='w'?game.black_name:game.white_name):'Aguardando rival';
  $('game-stake').textContent=game?'Prêmio total: '+fmt.format(game.stake*2)+' créditos':'Partidas com créditos fictícios';
