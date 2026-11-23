@@ -13,7 +13,7 @@ function render(){
 preset.forEach(b=>b.addEventListener('click',()=>{
  amount.value=b.dataset.pixAmount;
  render();
- status.textContent='Valor selecionado: '+fmt.format(Number(amount.value))+'. Pix de verdade ainda não está habilitado.';
+ status.textContent='Valor selecionado: '+fmt.format(Number(amount.value))+'. Integração com Mercado Pago aguardando aprovação; não há pagamento ativo.';
 }));
 amount.addEventListener('input',render);
 button.addEventListener('click',()=>{
@@ -23,7 +23,7 @@ button.addEventListener('click',()=>{
    status.textContent='Informe um valor válido entre R$ 0,10 e R$ 10.000, com até duas casas decimais.';
    return;
  }
- status.textContent='Prévia: '+fmt.format(n)+'. O QR Code e o Pix Copia e Cola continuam desativados. Nenhum crédito será comprado ou liberado até a integração com provedor aprovado.';
+ status.textContent='Simulação Mercado Pago: '+fmt.format(n)+'. Nenhum Pix é gerado. Antes da ativação, precisamos da aprovação do provedor para damas com premiações resgatáveis, da validação jurídica e das condições para cobranças de baixo valor.';
 });
 render();
 })();
