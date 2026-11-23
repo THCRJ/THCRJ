@@ -27,7 +27,8 @@ async function request(action,values={},timeout=13000){
   if(!response.ok||!data?.ok)throw new Error(data?.error||'Falha na comunicação com o servidor');
   return data;
  }catch(e){
-  if(e?.name==='AbortError')throw new Error('Conexão demorou demais. Tente novamente.');
+  if(e?.name==='AbortError')throw new Error('Conexão com as damas demorou demais. Toque em Reconectar.');
+  if(e instanceof TypeError)throw new Error('Servidor de damas indisponível. Verifique sua conexão e toque em Reconectar.');
   throw e;
  }finally{clearTimeout(timer)}
 }
