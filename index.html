@@ -67,7 +67,7 @@
 </style>
 <link rel="stylesheet" href="./neon-chat.css">
   <link rel="stylesheet" href="./neon-damas.css">
-  <link rel="stylesheet" href="./neon-pix-preview.css">
+  <link rel="stylesheet" href="./neon-wallet.css">
 </head>
 <body>
   <div class="app-shell">
@@ -97,11 +97,57 @@
       </section>
       <nav class="tabs" aria-label="Seções">
         <button class="tab active" data-tab="checkers" type="button">♟️ Damas online</button>
+        <button class="tab" data-tab="wallet" type="button">◇ Carteira</button>
         <button class="tab" data-tab="games" type="button">🎮 Jogos</button>
         <button class="tab" data-tab="history" type="button">◷ Histórico</button>
         <button class="tab" data-tab="rules" type="button">ⓘ Regras</button>
       </nav>
       
+      
+      <section id="wallet-panel" class="panel" hidden aria-label="Gerenciamento de créditos — modo de demonstração">
+        <div class="section-head">
+          <div><div class="overline">GERENCIAMENTO INDEPENDENTE</div><h2>◇ Carteira de créditos</h2></div>
+          <span class="live-label">SIMULAÇÃO · SEM PIX REAL</span>
+        </div>
+        <p class="wallet-warning">Esta é uma demonstração. Comprar e vender abaixo não envia Pix, não movimenta reais e não altera o saldo das damas ou dos demais jogos. Valores são apenas ilustrativos.</p>
+        <div class="wallet-summary">
+          <div><small>SALDO DE CRÉDITOS DA CARTEIRA</small><strong id="wallet-balance">—</strong><small>créditos fictícios disponíveis</small></div>
+          <div><small>PERFIL DE TESTE</small><strong id="wallet-account">Conectando...</strong><small>carteira separada dos jogos</small></div>
+        </div>
+        <p id="wallet-message" class="wallet-message" role="status" aria-live="polite">Carregando carteira de demonstração...</p>
+        <div class="wallet-grid">
+          <div class="wallet-operation">
+            <h3>◈ Comprar créditos</h3>
+            <p>Simule uma compra por Pix. O sistema registrará os créditos fictícios sem gerar cobrança.</p>
+            <label for="wallet-buy-amount">Valor da compra simulada (R$)</label>
+            <input id="wallet-buy-amount" type="number" inputmode="decimal" min="0.01" max="1000" step="0.01" value="0.10"/>
+            <div class="wallet-chips" aria-label="Valores sugeridos">
+              <button type="button" data-wallet-buy="0.10">R$ 0,10</button>
+              <button type="button" data-wallet-buy="1.00">R$ 1</button>
+              <button type="button" data-wallet-buy="5.00">R$ 5</button>
+              <button type="button" data-wallet-buy="10.00">R$ 10</button>
+            </div>
+            <p class="wallet-calculation">Créditos de teste: <b id="wallet-buy-credits">10</b></p>
+            <button type="button" class="wallet-primary" id="wallet-buy-btn" disabled>Simular compra de créditos</button>
+          </div>
+          <div class="wallet-operation">
+            <h3>◇ Vender créditos</h3>
+            <p>Simule a venda dos créditos disponíveis. Não há envio de Pix para nenhuma chave.</p>
+            <label for="wallet-sell-credits">Quantidade de créditos para vender</label>
+            <input id="wallet-sell-credits" type="number" inputmode="numeric" min="1" max="100000" step="1" value="10"/>
+            <p class="wallet-calculation">Valor de referência: <b id="wallet-sell-value">R$ 0,10 (simulado)</b></p>
+            <button type="button" class="wallet-primary" id="wallet-sell-btn" disabled>Simular venda de créditos</button>
+          </div>
+        </div>
+        <div class="wallet-history">
+          <div class="wallet-history-head">
+            <h3>Histórico da carteira</h3>
+            <button type="button" id="wallet-refresh" class="np-damas-secondary">↻ Atualizar</button>
+          </div>
+          <div id="wallet-history-list" aria-live="polite"><p>Nenhuma movimentação.</p></div>
+        </div>
+        <p class="wallet-foot">PagBank: integração financeira ainda não ativa. Futuras compras e vendas reais exigem identificação do titular, provedor aprovado, conciliação automática dos pagamentos e proteção contra operações indevidas. A carteira de teste não é dinheiro nem pode ser sacada.</p>
+      </section>
       <section id="checkers-panel" class="panel" aria-label="Damas multiplayer com créditos fictícios">
         <div class="section-head">
           <div><div class="overline">JOGUE CONTRA PESSOAS REAIS</div><h2>♟️ Damas Online</h2></div>
@@ -123,17 +169,11 @@
             <button type="button" id="np-damas-retry" class="np-damas-secondary" hidden style="margin-top:12px">↻ Reconectar</button>
           </div>
           <aside class="np-damas-side">
-            <div class="np-pix-preview" aria-label="Preparação de pagamentos Pix com Mercado Pago">
-              <div class="np-pix-preview-head"><h3>◇ Mercado Pago · Pix</h3><span>AGUARDANDO APROVAÇÃO</span></div>
-              <p>Integração escolhida: <strong>Mercado Pago</strong>. Como as damas envolvem disputa de créditos e proposta de saque dos ganhos, o uso para dinheiro real depende de aprovação expressa do provedor e validação legal.</p>
-              <label for="np-pix-amount" class="np-damas-label">VALOR DA COMPRA (R$)</label>
-              <input id="np-pix-amount" class="np-damas-nickname" type="number" min="0.10" max="10000" step="0.01" inputmode="decimal" value="5.00" aria-describedby="np-pix-status"/>
-              <div class="np-pix-amounts" role="group" aria-label="Valores ilustrativos de compra">
-                <button type="button" data-pix-amount="0.10">R$ 0,10</button>
-                <button type="button" data-pix-amount="1.00">R$ 1</button>
-                <button type="button" data-pix-amount="5.00">R$ 5</button>
-                <button type="button" data-pix-amount="10.00">R$ 10</button>
-              </div>
+            <div class="wallet-aside-link">
+              <strong>◇ Carteira de créditos</strong>
+              <p>Compra e venda simuladas. Sem Pix real. Gerencie na aba Carteira.</p>
+              <button type="button" id="wallet-open" class="np-damas-secondary">Abrir carteira</button>
+            </div>
               <button type="button" id="np-pix-show" class="np-damas-secondary np-pix-preview-button">Visualizar compra pelo Mercado Pago</button>
               <p id="np-pix-status" role="status" aria-live="polite">Integração Mercado Pago pendente de autorização. Ainda não há cobrança real, chave Pix nem QR Code nesta página.</p>
               <p class="np-pix-fine">Não envie dinheiro. Os créditos do jogo continuam fictícios e sem saques. A aceitação de pagamentos a partir de R$ 0,10 e as taxas deverão ser confirmadas com o Mercado Pago.</p><p class="np-pix-fine"><a href="https://www.mercadopago.com.br/developers/pt/docs/checkout-api-orders/payment-integration/websites/pix" target="_blank" rel="noopener noreferrer">Documentação oficial de Pix do Mercado Pago</a></p>
@@ -805,7 +845,7 @@ async function claimBonus(){
 }
 function selectTab(tab){
   document.querySelectorAll('.tab').forEach(el=>el.classList.toggle('active',el.dataset.tab===tab));
-  ['checkers','games','history','rules'].forEach(name=>{$(name+'-panel').hidden=name!==tab;});
+  ['checkers','wallet','games','history','rules'].forEach(name=>{$(name+'-panel').hidden=name!==tab;});
 }
 async function init(){
   buildRaceLanes();
@@ -830,7 +870,7 @@ init();
 
 
 <script src="./neon-damas.js"></script>
-<script src="./neon-pix-preview.js"></script>
+<script src="./neon-wallet.js"></script>
 <script src="./neon-chat.js"></script>
 
 <!-- Chat usa WebSocket nativo; nenhuma biblioteca externa necessária. -->
