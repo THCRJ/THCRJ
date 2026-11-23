@@ -54,3 +54,17 @@
 #checkers-panel .np-chat-log{min-height:100px}
 @media(max-width:730px){.np-damas-wrap{grid-template-columns:1fr;gap:15px}.np-damas-side{padding:13px}.np-damas-board{max-width:500px}.np-damas-head{margin-bottom:8px}.np-damas-stakes{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:420px){.np-damas-board{border-width:5px}.np-damas-piece{border-width:2px}.np-damas-stakes{grid-template-columns:repeat(2,minmax(0,1fr))}#checkers-panel .np-chat-panel{height:340px}}
+/* Lobby de desafios públicos - valores livres */
+#np-damas-stake-value{font-variant-numeric:tabular-nums;font-weight:800;font-size:18px}
+.np-damas-waiting-list{display:flex;flex-direction:column;flex-wrap:nowrap;align-items:stretch;gap:9px;margin:12px 0}
+.np-damas-offer{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:11px;border:1px solid #575070;border-radius:12px;background:#27203b}
+.np-damas-offer-info{display:flex;flex-direction:column;gap:4px;min-width:0;overflow-wrap:anywhere}
+.np-damas-offer-info strong{font-size:13px;color:#f6eaff}
+.np-damas-offer-info span{font-size:12px;color:#cfff82}
+.np-damas-accept{flex-shrink:0;border:1px solid #a3d45a;border-radius:9px;background:#caff76;color:#19220d;font-weight:850;padding:11px 14px;font-size:12px}
+.np-damas-accept:disabled{opacity:.55;cursor:not-allowed;background:#554e5f;color:#ddd0e6;border-color:#686073}
+.np-damas-empty{font-size:12px;color:#c5b9d6;line-height:1.5;border:1px dashed #5c5274;border-radius:11px;padding:16px;background:#221d33}
+@media(max-width:420px){
+ .np-damas-offer{gap:6px;padding:9px}
+ .np-damas-accept{padding:10px 11px}
+}
