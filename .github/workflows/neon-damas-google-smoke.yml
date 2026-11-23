@@ -1,0 +1,76 @@
+name: Neon Play - Damas Google e créditos fictícios
+on:
+  push:
+    branches: [neon-play-teste]
+    paths:
+      - index.html
+      - neon-damas-google.js
+      - neon-damas-google.css
+      - .github/workflows/neon-damas-google-smoke.yml
+  workflow_dispatch:
+
+jobs:
+  damas_google:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validar JavaScript e elementos da interface
+        run: |
+          node --check neon-damas-google.js
+          python3 - <<'PY'
+          import pathlib,re
+          html=pathlib.Path('index.html').read_text()
+          js=pathlib.Path('neon-damas-google.js').read_text()
+          ids=set(re.findall(r'\bid="([^"]+)"',html))
+          refs=set(re.findall(r"\$\('([^']+)'\)",js))
+          missing=sorted(refs-ids)
+          assert not missing,'IDs faltando no HTML: '+repr(missing)
+          assert 'Continuar com Google' in html
+          assert "provider:'google'" in js
+          assert 'neon-damas-google' in js
+          assert '1000' in html+js
+          assert 'chat-messages' in html and 'postgres_changes' in js
+          assert 'neon-auth-app.js' not in html
+          assert 'neon-wallet' not in html and 'Mercado Pago' not in html
+          assert 'PagBank' not in html and 'neon-pix-preview' not in html
+          assert 'neon-race-3d' not in html and 'Dados' not in html
+          assert 'créditos fictícios' in html
+          print('Validado: damas online, Google, 1.000 créditos, chat, sem dinheiro real')
+          PY
+      - name: Testar endpoints e bloqueio financeiro sem autenticação
+        run: |
+          python3 - <<'PY'
+          import json,urllib.request,urllib.error
+          base='https://plcyaarsfzmjoqkbqlid.supabase.co/functions/v1/'
+          with urllib.request.urlopen(base+'neon-damas-google',timeout=22) as r:
+              d=json.loads(r.read())
+              assert d['ok'] and d['starting_credits']==1000 and d['real_money'] is False
+              print('Damas Google: GET saudável, créditos iniciais 1000')
+          req=urllib.request.Request(base+'neon-damas-google',method='POST',
+              data=b'{"action":"bootstrap"}',headers={'Content-Type':'application/json'})
+          try:
+              urllib.request.urlopen(req,timeout=22)
+              raise AssertionError('Servidor aceitou acesso sem Google')
+          except urllib.error.HTTPError as e:
+              assert e.code==401,e.code
+              print('Damas Google: bloqueado sem login HTTP 401')
+          for name in ('neon-wallet-demo','neon-damas','neon-pagbank-sandbox'):
+              try:
+                  urllib.request.urlopen(base+name,timeout=22)
+                  raise AssertionError('Endpoint legado ativo: '+name)
+              except urllib.error.HTTPError as e:
+                  assert e.code==410,(name,e.code)
+                  print(name,'desativado HTTP 410')
+          PY
+      - name: Validar publicação HTTPS do site
+        run: |
+          python3 - <<'PY'
+          import urllib.request,os
+          sha=os.environ.get('GITHUB_SHA')
+          url='https://raw.githack.com/THCRJ/THCRJ/'+sha+'/index.html'
+          with urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0'}),timeout=25) as r:
+              data=r.read()
+              assert r.status==200 and b'neon-damas-google.js' in data and b'chat-messages' in data
+              print('Neon Play visual acessível via HTTPS:',sha[:12])
+          PY
