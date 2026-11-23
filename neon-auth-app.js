@@ -12,13 +12,56 @@ function rand(max){const a=new Uint32Array(1),cut=Math.floor(4294967296/max)*max
 function google(user){return user?.app_metadata?.provider==='google'}
 function tab(v){if(site.hidden)return;document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab===v));['wallet','games','checkers','history','rules'].forEach(n=>$(n+'-panel').hidden=n!==v);if(v==='games')initRace()}
 document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>tab(b.dataset.tab)));
-function signedOut(t){++nonce;owner=null;site.hidden=true;gate.hidden=false;msg.textContent=t||'Entre com Google para continuar.';login.disabled=!sb;$('balance').textContent='—'}
+/* A autenticação PKCE ocorre ao retornar do Google.
+   Eventos INITIAL_SESSION sem sessão não podem desfazer um SIGNED_IN válido. */
+const REDIRECT_URL='https://raw.githack.com/THCRJ/THCRJ/neon-play-teste/index.html';
+let logoutEpoch=0,verificationCount=0;
+function signedOut(t){
+ ++logoutEpoch;owner=null;site.hidden=true;gate.hidden=false;
+ msg.textContent=t||'Entre com Google para continuar.';
+ login.disabled=!sb;
+ $('balance').textContent='—';
+ const retry=$('session-retry');if(retry)retry.hidden=!sb;
+}
 async function signedIn(session){
- const n=++nonce;if(!session?.user||!google(session.user)){signedOut();return}
- const result=await sb.auth.getUser();if(n!==nonce)return;
- if(result.error||!google(result.data?.user)){signedOut('Conta Google não validada. Entre novamente.');return}
- const u=result.data.user;gate.hidden=true;site.hidden=false;$('google-email').textContent=u.email||'Google';
- if(owner!==u.id){owner=u.id;tab('wallet');await loadBalance(u.id)}
+ if(!session?.user)return;
+ const epoch=logoutEpoch;
+ const check=++verificationCount;
+ msg.textContent='Verificando sua conta Google…';
+ try{
+  const {data,error}=await sb.auth.getUser();
+  if(epoch!==logoutEpoch||check!==verificationCount)return;
+  if(error)throw error;
+  const user=data?.user;
+  if(!user||!google(user)){
+   signedOut('Esta sessão não pertence a uma conta Google. Entre com Google.');return;
+  }
+  gate.hidden=true;site.hidden=false;
+  $('google-email').textContent=user.email||'Conta Google';
+  const retry=$('session-retry');if(retry)retry.hidden=true;
+  if(owner!==user.id){owner=user.id;tab('wallet');await loadBalance(user.id)}
+ }catch(e){
+  if(epoch===logoutEpoch&&check===verificationCount){
+   signedOut('Não foi possível validar a sessão. Toque em "Verificar acesso" ou entre novamente.');
+  }
+ }
+}
+async function recoverSession(){
+ if(!sb)return;
+ msg.textContent='Recuperando sessão Google…';
+ const retry=$('session-retry');if(retry)retry.disabled=true;
+ try{
+  const {data,error}=await sb.auth.getSession();
+  if(error)throw error;
+  if(data.session)await signedIn(data.session);
+  else if(site.hidden){
+   const params=new URLSearchParams(location.search);
+   const providerError=params.get('error_description')||params.get('error');
+   signedOut(providerError?'O Google não concluiu a entrada. Tente novamente.':'Sessão não encontrada neste navegador. Abra o Neon Play no Chrome e entre novamente.');
+  }
+ }catch(e){
+  signedOut('Não foi possível recuperar o acesso. Confira sua conexão e tente novamente.');
+ }finally{if(retry)retry.disabled=false}
 }
 async function loadBalance(id){
  $('balance').textContent='Consultando…';
@@ -36,10 +79,11 @@ async function loadBalance(id){
 login.onclick=async()=>{
  if(!sb)return;login.disabled=true;msg.textContent='Abrindo a seleção de conta Google…';
  try{
-  const result=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin+location.pathname,queryParams:{prompt:'select_account'}}});
+  const result=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:REDIRECT_URL,queryParams:{prompt:'select_account'}}});
   if(result.error)throw result.error;
- }catch(e){login.disabled=false;msg.textContent='Configure Google OAuth no Supabase e autorize este endereço para entrar.'}
+ }catch(e){login.disabled=false;msg.textContent='Não foi possível abrir o Google. Confira sua conexão e tente novamente.'}
 };
+const retryButton=$('session-retry');if(retryButton)retryButton.onclick=recoverSession;
 $('logout').onclick=async()=>{if(sb)await sb.auth.signOut();signedOut('Você saiu do Neon Play.')};
 function initRace(){if(raceEngine||!window.HorseRace3D)return;try{raceEngine=new window.HorseRace3D($('race-canvas'),horses.map((name,i)=>({id:String(i+1),name})));raceEngine.selectHorse(pick)}catch(e){$('race-caption').textContent='A animação 3D não está disponível neste aparelho.'}}
 $('camera-button').onclick=()=>{if(raceEngine)raceEngine.toggleCamera()};
@@ -85,6 +129,14 @@ async function play(){
 document.querySelectorAll('[data-game]').forEach(x=>x.onclick=()=>chooseGame(x.dataset.game));
 $('free-play').onclick=play;chooseGame('race');
 if(!sb){signedOut('Não foi possível carregar o login seguro. Atualize a página.');return}
-sb.auth.onAuthStateChange((_,session)=>{if(session&&google(session.user)){Promise.resolve().then(()=>signedIn(session))}else signedOut()});
-sb.auth.getSession().then(({data,error})=>{if(error||!data.session)signedOut();else signedIn(data.session)}).catch(()=>signedOut('Falha de conexão com Google.'));
+msg.textContent='Verificando seu acesso Google…';
+sb.auth.onAuthStateChange((event,session)=>{
+ if(event==='SIGNED_OUT'){signedOut('Você saiu do Neon Play.');return;}
+ if(session&&google(session.user)){
+  /* Evita bloqueio de inicialização do cliente Supabase pelo callback de auth. */
+  setTimeout(()=>signedIn(session),0);
+ }
+ /* INITIAL_SESSION sem sessão não cancela um login PKCE em andamento. */
+});
+recoverSession();
 })();
