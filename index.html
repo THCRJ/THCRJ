@@ -129,6 +129,32 @@
             <p class="odds" id="odds">Escolha um dos 6 cavalos. O prêmio depende do multiplicador exibido.</p>
           </div>
         </div>
+        <section id="np-chat-panel" class="np-chat-panel" aria-label="Chat público ao vivo do Neon Play">
+          <div class="np-chat-head">
+            <div><h2>💬 Conversa dos jogadores</h2>
+              <div class="np-chat-meta"><span id="np-chat-indicator" class="np-chat-indicator"></span><span id="np-chat-status">Conectando...</span> · <span id="np-chat-online">Sala pública</span></div>
+            </div>
+          </div>
+          <div class="np-chat-name-row">
+            <label for="np-chat-name">Meu apelido</label>
+            <input type="text" class="np-chat-name" id="np-chat-name" maxlength="18" autocomplete="nickname" placeholder="Escolha seu apelido"/>
+            <button type="button" id="np-chat-retry" class="np-chat-retry" hidden>Reconectar</button>
+          </div>
+          <div class="np-chat-log" id="np-chat-log" role="log" aria-live="polite" aria-relevant="additions">
+            <div class="np-chat-note">Bem-vindo à sala pública! As mensagens aparecem ao vivo para quem estiver conectado. Não são armazenadas.</div>
+          </div>
+          <div class="np-chat-emoji" aria-label="Mensagens rápidas">
+            <button type="button" data-emoji="🏇" aria-label="Enviar cavalo" disabled>🏇</button>
+            <button type="button" data-emoji="🔥" aria-label="Enviar fogo" disabled>🔥</button>
+            <button type="button" data-emoji="👏" aria-label="Enviar aplausos" disabled>👏</button>
+            <button type="button" data-emoji="🎉" aria-label="Enviar comemoração" disabled>🎉</button>
+          </div>
+          <form class="np-chat-form" id="np-chat-form">
+            <input id="np-chat-text" class="np-chat-text" maxlength="160" type="text" placeholder="Escreva sua mensagem..." autocomplete="off" aria-label="Mensagem ao chat" required/>
+            <button id="np-chat-send" class="np-chat-send" type="submit" disabled>Enviar</button>
+          </form>
+          <div class="np-chat-safety">Chat público e temporário · não compartilhe informações pessoais</div>
+        </section>
       </section>
       <section id="history-panel" class="panel" hidden><div class="section-head"><div><div class="overline">SUAS PARTIDAS</div><h2>Histórico de jogadas</h2></div></div><div class="history" id="history-list"><p>Nenhuma rodada ainda.</p></div></section>
       <section id="rules-panel" class="panel" hidden><div class="section-head"><div><div class="overline">JOGO RESPONSÁVEL</div><h2>Como funciona</h2></div></div>
@@ -703,36 +729,9 @@ init();
 
 </script>
 
-<button id="np-chat-toggle" class="np-chat-toggle" type="button" aria-expanded="false" aria-controls="np-chat-panel">💬 Chat ao vivo <span id="np-chat-unread" class="np-chat-unread" hidden>0</span></button>
-<section id="np-chat-panel" class="np-chat-panel" aria-label="Chat público ao vivo do Neon Play" hidden>
-  <div class="np-chat-head">
-    <div><h2>💬 Conversa dos jogadores</h2>
-      <div class="np-chat-meta"><span id="np-chat-indicator" class="np-chat-indicator"></span><span id="np-chat-status">Conectando...</span> · <span id="np-chat-online">Sala pública</span></div>
-    </div>
-    <button type="button" id="np-chat-close" class="np-chat-close" aria-label="Fechar chat">✕</button>
-  </div>
-  <div class="np-chat-name-row">
-    <label for="np-chat-name">Meu apelido</label>
-    <input type="text" class="np-chat-name" id="np-chat-name" maxlength="18" autocomplete="nickname" placeholder="Escolha seu apelido"/>
-    <button type="button" id="np-chat-retry" class="np-chat-retry" hidden>Reconectar</button>
-  </div>
-  <div class="np-chat-log" id="np-chat-log" role="log" aria-live="polite" aria-relevant="additions">
-    <div class="np-chat-note">Bem-vindo à sala pública! As mensagens aparecem ao vivo para quem estiver conectado. Não são armazenadas.</div>
-  </div>
-  <div class="np-chat-emoji" aria-label="Mensagens rápidas">
-    <button type="button" data-emoji="🏇" aria-label="Enviar cavalo" disabled>🏇</button>
-    <button type="button" data-emoji="🔥" aria-label="Enviar fogo" disabled>🔥</button>
-    <button type="button" data-emoji="👏" aria-label="Enviar aplausos" disabled>👏</button>
-    <button type="button" data-emoji="🎉" aria-label="Enviar comemoração" disabled>🎉</button>
-  </div>
-  <form class="np-chat-form" id="np-chat-form">
-    <input id="np-chat-text" class="np-chat-text" maxlength="160" type="text" placeholder="Escreva sua mensagem..." autocomplete="off" aria-label="Mensagem ao chat" required/>
-    <button id="np-chat-send" class="np-chat-send" type="submit" disabled>Enviar</button>
-  </form>
-  <div class="np-chat-safety">Chat público e temporário · não compartilhe informações pessoais</div>
-</section>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.76.0"></script>
+
 <script src="./neon-chat.js"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.76.0"></script>
 </body>
 </html>
