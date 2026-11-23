@@ -33,3 +33,44 @@ jobs:
           test "$code" = "400"
           python3 -c 'import json; x=json.load(open("/tmp/neon-action.json")); assert "error" in x'
           echo "Neon Play: GET/CORS e RPC responderam normalmente."
+      - name: Testar dois jogadores, aposta virtual e liquidação
+        shell: bash
+        env:
+          API_URL: https://plcyaarsfzmjoqkbqlid.supabase.co/functions/v1/neon-damas
+        run: |
+          python3 - <<'PY'
+          import os, json, urllib.request, urllib.error
+          api = os.environ['API_URL']
+          def call(action, player=None, **kwargs):
+              body = {"action":action, **(player or {}), **kwargs}
+              req = urllib.request.Request(api, method="POST", data=json.dumps(body).encode(), headers={"Content-Type":"application/json"})
+              try:
+                  with urllib.request.urlopen(req, timeout=25) as resp:
+                      data = json.loads(resp.read())
+              except urllib.error.HTTPError as e:
+                  raise AssertionError(f"{action} HTTP {e.code}: {e.read().decode()[:300]}")
+              assert data.get("ok") is True, f"{action} nao respondeu OK: {data}"
+              return data
+          a = call('bootstrap', nickname='QA_NEON_A_231126')
+          b = call('bootstrap', nickname='QA_NEON_B_231126')
+          print("IDs contas de teste para limpeza:", a['auth']['id'], b['auth']['id'])
+          assert a['player']['balance']==50000 and b['player']['balance']==50000, 'saldo inicial invalido'
+          aa, bb = a['auth'], b['auth']
+          q = call('join',aa,stake=100)
+          assert q['queue'] and q['queue']['stake']==100, 'fila nao criada'
+          g = call('join',bb,stake=100)
+          assert g['game'] and g['game']['status']=='active', 'partida nao encontrada'
+          assert g['player']['balance']==49900, 'debito do segundo jogador incorreto'
+          first=call('state',aa)
+          assert first['game']['status']=='active' and first['player']['balance']==49900, 'debito do primeiro jogador incorreto'
+          moved=call('move',aa,**{'from':40,'to':33})
+          assert moved['game']['turn']=='b', 'jogada das claras falhou'
+          moved=call('move',bb,**{'from':17,'to':24})
+          assert moved['game']['turn']=='w', 'jogada das escuras falhou'
+          finish=call('resign',bb)
+          assert finish['game']['status']=='finished', 'partida nao encerrou'
+          win=call('state',aa)
+          assert win['player']['balance']==50100, 'premio nao creditado'
+          assert win['game']['winner_id']==aa['id'], 'vencedor errado'
+          print("TESTE FINAL: pareamento, movimentos e premios em creditos ficticios APROVADOS")
+          PY
