@@ -109,6 +109,9 @@
           <b>Seu desafio está publicado</b>
           <div>Valor: <b id="queue-amount">100</b> créditos por jogador.</div>
           <button type="button" class="secondary" id="btn-cancel">Cancelar desafio</button>
+          <button type="button" class="primary" id="btn-invite" style="margin-top:8px">Compartilhar link com amigo</button>
+          <p class="label-note">Seu amigo deve entrar com Google e aceitar seu desafio pelo apelido. Os desafios são públicos.</p>
+          <p class="label-note" id="invite-status" role="status" aria-live="polite"></p>
         </div>
         <div class="section-top" style="margin:18px 0 10px">
           <h3 style="font-size:13px">Aguardando jogadores</h3>
@@ -147,5 +150,19 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js" defer></script>
 <script src="./neon-damas-google.js?v=20261123-1" defer></script>
+<script>
+(()=>{
+ const link="https://raw.githack.com/THCRJ/THCRJ/neon-play-teste/index.html";
+ const button=document.getElementById('btn-invite');
+ const status=document.getElementById('invite-status');
+ button.addEventListener('click',async()=>{
+  const nickname=document.getElementById('own-name').textContent;
+  const amount=document.getElementById('queue-amount').textContent;
+  const message='Jogue damas comigo no Neon Play! Entre com Google e aceite o desafio de '+nickname+' de '+amount+' créditos fictícios por jogador.';
+  if(navigator.share){try{await navigator.share({title:'Neon Play – Damas',text:message,url:link});return}catch(e){if(e.name==='AbortError')return}}
+  try{await navigator.clipboard.writeText(message+' '+link);status.textContent='Convite copiado. Envie ao seu amigo.'}catch(e){window.prompt('Copie e envie este convite:',message+' '+link)}
+ });
+})();
+</script>
 </body>
 </html>
