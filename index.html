@@ -14,9 +14,9 @@
     <div class="logo"><span class="logo-mark">♟</span><span>NEON<b>PLAY</b></span></div>
     <h1>Seu próximo desafio começa aqui.</h1>
     <p>Damas online, desafios entre amigos e chat ao vivo. Jogue sem cadastro e receba <strong style="color:#c2f981">1.000 créditos fictícios</strong> para começar.</p>
-    <button type="button" class="google-btn" id="login-btn">Entrar e jogar</button>
+    <button type="button" class="google-btn" id="login-btn">Entrar sem Google</button>
     <button type="button" class="retry" id="login-retry" hidden>Tentar novamente</button>
-    <div class="login-help" id="login-status" role="status" aria-live="polite">Conectando ao jogo…</div>
+    <div class="login-help" id="login-status" role="status" aria-live="polite">Acesso direto como convidado.</div>
     <p style="font-size:11px">Créditos apenas para diversão. Sem depósitos, Pix ou saques.</p>
   </div>
 </section>
@@ -153,7 +153,7 @@
 <script src="./neon-damas-guest.js?v=20261125-2" defer></script>
 <script>
 (()=>{
- const link="https://raw.githack.com/THCRJ/THCRJ/neon-play-teste/index.html";
+ const link=location.href.split("#")[0];
  const button=document.getElementById('btn-invite');
  const status=document.getElementById('invite-status');
  button.addEventListener('click',async()=>{
