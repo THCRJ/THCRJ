@@ -8,23 +8,40 @@ function initialBoard(){
 }
 const inside=(r,c)=>r>=0&&r<8&&c>=0&&c<8;
 function captures(b,ix){
- const p=Number(b[ix]||0),r=Math.floor(ix/8),c=ix%8,out=[];
+ const p=Number(b[ix]||0),r=ix>>3,c=ix%8,out=[];
  if(!p)return out;
  for(const dr of [-1,1])for(const dc of [-1,1]){
-  const r1=r+dr,c1=c+dc,r2=r+dr*2,c2=c+dc*2;
-  if(inside(r2,c2)&&b[r1*8+c1]*p<0&&b[r2*8+c2]===0)out.push(r2*8+c2)
+  if(Math.abs(p)===1){
+   const r1=r+dr,c1=c+dc,r2=r+2*dr,c2=c+2*dc;
+   if(inside(r2,c2)&&b[r1*8+c1]*p<0&&b[r2*8+c2]===0)out.push(r2*8+c2);
+  }else{
+   let rr=r+dr,cc=c+dc,enemy=false;
+   while(inside(rr,cc)){
+    const j=rr*8+cc,v=b[j];
+    if(v===0){if(enemy)out.push(j)}
+    else if(v*p>0||enemy)break;
+    else enemy=true;
+    rr+=dr;cc+=dc;
+   }
+  }
  }
  return out;
 }
 function available(b,ix,side,forced){
  const p=Number(b[ix]||0),color=side==='w'?1:-1;
- if(p*color<=0||(forced!==null&&forced!==undefined&&ix!==forced))return [];
- const jumps=captures(b,ix),mustJump=b.some((v,j)=>v*color>0&&captures(b,j).length>0);
- if(mustJump)return jumps;
- const out=[],r=Math.floor(ix/8),c=ix%8;
+ if(p*color<=0||(forced!=null&&ix!==forced))return [];
+ const jumps=captures(b,ix);
+ if(forced!=null||b.some((v,j)=>v*color>0&&captures(b,j).length>0))return jumps;
+ const out=[],r=ix>>3,c=ix%8;
  for(const dr of [-1,1]){
   if(Math.abs(p)===1&&dr!==-color)continue;
-  for(const dc of [-1,1])if(inside(r+dr,c+dc)&&b[(r+dr)*8+c+dc]===0)out.push((r+dr)*8+c+dc)
+  for(const dc of [-1,1]){
+   let rr=r+dr,cc=c+dc;
+   while(inside(rr,cc)&&b[rr*8+cc]===0){
+    out.push(rr*8+cc);if(Math.abs(p)===1)break;
+    rr+=dr;cc+=dc;
+   }
+  }
  }
  return out;
 }
